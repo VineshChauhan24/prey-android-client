@@ -91,7 +91,7 @@
 
 
         <activity
-            android:name="com.prey.activities.LoginActivity"
+            android:name="com.prey.activities.WebViewDemo"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleInstance"

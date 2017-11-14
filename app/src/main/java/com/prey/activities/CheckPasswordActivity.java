@@ -399,7 +399,7 @@ public class CheckPasswordActivity extends AppCompatActivity implements Activity
     }
 
 
-    protected class CheckPassword extends AsyncTask<String, Void, Void> {
+    public class CheckPassword extends AsyncTask<String, Void, Void> {
 
         ProgressDialog progressDialog = null;
         boolean isPasswordOk = false;
