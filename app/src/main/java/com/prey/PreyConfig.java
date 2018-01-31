@@ -100,6 +100,7 @@ public class PreyConfig {
     public static final String REVOKED_PASSWORD="REVOKED_PASSWORD";
     public static final String NOTIFICATION_ID="NOTIFICATION_ID";
     public static final String INTERVAL_REPORT="INTERVAL_REPORT";
+    public static final String INTERVAL_AWARE="INTERVAL_AWARE";
     public static final String EXCLUDE_REPORT="EXCLUDE_REPORT";
     public static final String LAST_REPORT_START_DATE="LAST_REPORT_START_DATE";
     public static final String TIMEOUT_REPORT="TIMEOUT_REPORT";
@@ -155,6 +156,8 @@ public class PreyConfig {
     public static final String NOTIFICATION_ANDROID_7="notify_android_7";
 
     public static final String JOB_ID_LOCK="job_id_lock";
+
+    public static final String AWARE="aware";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -789,13 +792,25 @@ public class PreyConfig {
 
 
     public String getIntervalReport(){
-        return getString(PreyConfig.INTERVAL_REPORT,"");
+        return "";
+        //return getString(PreyConfig.INTERVAL_REPORT,"" );
     }
 
     public void setIntervalReport(String intervalReport) {
 
         this.saveString(PreyConfig.INTERVAL_REPORT, intervalReport);
     }
+
+    public String getIntervalAware(){
+        return "";
+        //return getString(PreyConfig.INTERVAL_AWARE,"");
+    }
+
+    public void setIntervalAware(String intervalAware) {
+
+        this.saveString(PreyConfig.INTERVAL_AWARE, intervalAware);
+    }
+
 
     public String getExcludeReport(){
         return getString(PreyConfig.EXCLUDE_REPORT,"");
@@ -960,4 +975,14 @@ public class PreyConfig {
     public void setJobIdLock(String jobIdLock) {
         saveString(PreyConfig.JOB_ID_LOCK, jobIdLock);
     }
+
+
+    public boolean getAware() {
+        return getBoolean(PreyConfig.AWARE, false);
+    }
+
+    public void setAware(boolean aware) {
+        this.saveBoolean(PreyConfig.AWARE, aware);
+    }
+
 }

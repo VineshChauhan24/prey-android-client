@@ -421,6 +421,10 @@ public class PreyWebServices {
         return getDeviceUrlApiv2(ctx).concat("/info.json");
     }
 
+    public String getLocationUrlJson(Context ctx) throws PreyException {
+        return getDeviceUrlApiv2(ctx).concat("/location.json");
+    }
+
     private String getDeviceUrlApiv2(Context ctx) throws PreyException {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         String deviceKey = preyConfig.getDeviceId();
@@ -658,6 +662,18 @@ public class PreyWebServices {
             preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
 
 
+        } catch (Exception e) {
+            PreyLogger.e("Contact wasn't send", e);
+        }
+        return preyHttpResponse;
+    }
+
+    public PreyHttpResponse sendLocation(Context ctx, HashMap<String, String> parameters) {
+        PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
+        PreyHttpResponse preyHttpResponse = null;
+        try {
+            String url = getLocationUrlJson(ctx);
+            preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
         } catch (Exception e) {
             PreyLogger.e("Contact wasn't send", e);
         }

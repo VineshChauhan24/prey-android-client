@@ -116,6 +116,8 @@ public class JSONParser {
         //	json = "[ {\"command\": \"start\",\"target\": \"detach\",\"options\": {}}]";
 
 
+
+
         if ("[]".equals(json)) {
             return null;
         }
@@ -132,12 +134,13 @@ public class JSONParser {
             JSONArray jsonArray = jsnobject.getJSONArray("prey");
             for (int i = 0; i < jsonArray.length(); i++) {
                 String jsonCommand= jsonArray.get(i).toString();
+                PreyLogger.i(jsonCommand);
                 JSONObject explrObject =new JSONObject(jsonCommand);
                 PreyLogger.i(explrObject.toString());
                 listaJson.add(explrObject);
             }
         }catch(Exception e){
-            //PreyLogger.e("error in parser:"+e.getMessage(), e);
+            PreyLogger.e("error in parser:"+e.getMessage(), e);
         }
         return listaJson;
     }

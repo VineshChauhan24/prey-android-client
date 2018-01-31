@@ -54,6 +54,7 @@ public class WelcomeActivity extends FragmentActivity {
     public void menu() {
         PreyLogger.d("menu WelcomeActivity");
         String email = PreyConfig.getPreyConfig(this).getEmail();
+        PreyLogger.i("email:"+email);
         if(email==null||"".equals(email)){
             PreyLogger.d("email:"+email);
             PreyConfig.getPreyConfig(this).setProtectReady(false);
@@ -61,8 +62,10 @@ public class WelcomeActivity extends FragmentActivity {
             PreyConfig.getPreyConfig(this).setProtectTour(false);
         }
         if (PreyConfig.getPreyConfig(this).isThisDeviceAlreadyRegisteredWithPrey()){
+            PreyLogger.i("ready");
             ready();
         } else {
+            PreyLogger.i("InitActivity");
             Intent intent = new Intent(getApplicationContext(), InitActivity.class);
             startActivity(intent);
             finish();

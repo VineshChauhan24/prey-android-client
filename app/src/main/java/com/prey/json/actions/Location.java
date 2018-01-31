@@ -16,6 +16,9 @@ import android.content.Context;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
+import com.prey.actions.aware.AwareController;
+import com.prey.actions.aware.AwareScheduled;
+import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.location.LocationThread;
 import com.prey.actions.location.LocationUtil;
 import com.prey.actions.observer.ActionResult;
@@ -87,6 +90,24 @@ public class Location extends JsonAction{
             }
         }
     }
+
+
+    public  void start_location_aware(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.i("_________start_location_aware:");
+        AwareController.getInstance().addAware(ctx);
+        AwareScheduled.getInstance(ctx  ).run();
+        //AwareController.getInstance().run(ctx);
+
+    }
+
+
+    public  void start_location_aware2(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.i("_________start_location_aware2:");
+        AwareController.getInstance().addAware(ctx);
+        AwareController.getInstance().run(ctx);
+
+    }
+
 
 }
 

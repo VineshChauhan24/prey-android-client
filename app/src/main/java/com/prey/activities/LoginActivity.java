@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import com.prey.PreyLogger;
 import com.prey.PreyVerify;
 
 import android.app.Activity;
@@ -78,6 +79,7 @@ public class LoginActivity extends Activity {
     }
 
     private void showLogin() {
+        PreyLogger.i("showLogin");
         Intent intent = null;
         intent = new Intent(LoginActivity.this, WelcomeActivity.class);
         startActivity(intent);

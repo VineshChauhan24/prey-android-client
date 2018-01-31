@@ -303,6 +303,11 @@
         <receiver android:name="com.prey.receivers.AlarmScheduledReceiver" />
         <receiver android:name="com.prey.receivers.AlarmDisablePowerReceiver" />
 
+
+        <receiver android:name="com.prey.actions.aware.AlarmAwareReceiver" />
+        <service  android:name="com.prey.actions.aware.AwareIntentService" />
+        <service  android:name="com.prey.actions.aware.AwareService" />
+
         <receiver android:name="com.prey.receivers.PreyDisablePowerOptionsReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
@@ -364,6 +369,17 @@
         <service
             android:name="com.prey.services.PreyRegistrationIntentService"
             android:exported="false">
+        </service>
+
+
+        <service
+            android:name="com.prey.services.AwesomeTileService"
+
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action
+                    android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
         </service>
 
 

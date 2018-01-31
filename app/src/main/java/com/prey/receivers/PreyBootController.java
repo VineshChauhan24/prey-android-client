@@ -13,6 +13,7 @@ import android.content.Intent;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
+import com.prey.actions.aware.AwareScheduled;
 import com.prey.json.actions.Report;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyLockService;
@@ -26,6 +27,15 @@ public class PreyBootController extends BroadcastReceiver {
             String interval = PreyConfig.getPreyConfig(context).getIntervalReport();
             if (interval != null && !"".equals(interval)) {
                 Report.run(context, Integer.parseInt(interval));
+            }
+            String intervalAware = PreyConfig.getPreyConfig(context).getIntervalAware();
+            if (intervalAware != null && !"".equals(intervalAware)) {
+                final Context ctx=context;
+                new Thread() {
+                    public void run() {
+                    AwareScheduled.getInstance(ctx).run();
+                    }
+                }.start();
             }
             boolean disablePowerOptions = PreyConfig.getPreyConfig(context).isDisablePowerOptions();
             if (disablePowerOptions) {

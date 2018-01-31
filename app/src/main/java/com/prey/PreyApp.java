@@ -7,10 +7,14 @@
 package com.prey;
 
 import android.app.Application;
+import android.content.Context;
 
+import com.prey.actions.aware.AwareController;
+import com.prey.actions.aware.AwareScheduled;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.backwardcompatibility.FroyoSupport;
 import com.prey.net.PreyWebServices;
 
 import java.util.Date;
@@ -28,6 +32,7 @@ public class PreyApp extends Application {
             PreyLogger.i("Application launched!");
             PreyLogger.d("__________________");
 
+           // PreyConfig.getPreyConfig(this).setDeviceId("b48d38");
 
             boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
             PreyLogger.d("chromium:"+chromium);
@@ -54,7 +59,40 @@ public class PreyApp extends Application {
                 PreyConfig.getPreyConfig(this).registerC2dm();
                 new Thread() {
                     public void run() {
-                        GeofenceController.getInstance().init(getApplicationContext());
+                        /*
+                        String error="";
+                        Context ctx=getApplicationContext();
+                        try {
+                            PreyConfig.getPreyConfig(ctx).unregisterC2dm(false); } catch (Exception e) { error = e.getMessage();}
+                        try {   PreyConfig.getPreyConfig(ctx).setSecurityPrivilegesAlreadyPrompted(false);} catch (Exception e) {}
+
+
+                        try {   PreyConfig.getPreyConfig(ctx).setProtectAccount(false);} catch (Exception e) {error = e.getMessage();}
+                        try {   PreyConfig.getPreyConfig(ctx).setProtectPrivileges(false);} catch (Exception e) {error = e.getMessage();}
+                        try {   PreyConfig.getPreyConfig(ctx).setProtectTour(false);} catch (Exception e) {error = e.getMessage();}
+                        try {   PreyConfig.getPreyConfig(ctx).setProtectReady(false);} catch (Exception e) {error = e.getMessage();}
+                        try {   PreyConfig.getPreyConfig(ctx).setEmail("");} catch (Exception e) {error = e.getMessage();}
+
+                        try {
+                            FroyoSupport fSupport = FroyoSupport.getInstance(ctx);
+                            if (fSupport.isAdminActive()) {
+                                fSupport.removeAdminPrivileges();
+                            }
+                        } catch (Exception e) {}
+
+                        try {
+                            GeofenceController.getInstance().deleteAllZones(ctx);
+                        } catch (Exception e) {}
+
+                        try {
+                            FileretrievalController.getInstance().deleteAll(ctx);
+                        } catch (Exception e) {}
+
+                        try {  PreyWebServices.getInstance().deleteDevice(ctx);} catch (Exception e) {error = e.getMessage();}
+                        try {    PreyConfig.getPreyConfig(ctx).wipeData();} catch (Exception e) {error = e.getMessage();}
+*/
+
+                        //GeofenceController.getInstance().init(getApplicationContext());
                     }
                 }.start();
                 new Thread() {
@@ -62,11 +100,20 @@ public class PreyApp extends Application {
                         FileretrievalController.getInstance().run(getApplicationContext());
                     }
                 }.start();
+                /*
                 if (missing) {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();
                     }
-                }
+                }*/
+                new Thread() {
+                    public void run() {
+                        if (PreyConfig.getPreyConfig(getApplicationContext()).getAware()) {
+                            AwareScheduled.getInstance(getApplicationContext()).run();
+
+                        }
+                    }
+                }.start();
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
