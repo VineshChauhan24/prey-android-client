@@ -56,6 +56,14 @@
             android:title="@string/preferences_scheduled_title" />
 
 
+        <Preference
+
+            android:key="PREFS_DESTINATION_SMS"
+            android:summary="@string/preferences_destination_sms_summary"
+            android:title="@string/preferences_destination_sms" >
+            <intent android:action="com.prey.activities.SEND_SMS_CONF" />
+        </Preference>
+
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_detach_title"

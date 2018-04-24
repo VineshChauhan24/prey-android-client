@@ -286,4 +286,19 @@
 
     <string name="super_lock">Please enter your\n PIN to unlock</string>
 
+    <string name="hero_chosen">Hero chosen!</string>
+    <string name="choose_your_hero">CHOOSE YOUR HERO</string>
+    <string name="no_hero_selected">No hero selected</string>
+    <string name="your_hero_text">The person who you choose will be your lost-phone emergency contact. Whoever finds your locked mobile will only be able to call him/her</string>
+    <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
+    <string name="notify_your_hero_now">Good choice! Would you like to let %s know you\'ve selected him as your hero? We\'ll send a quick SMS message.</string>
+    <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
+    <string name="preferences_destination_sms_not_valid">The contact you entered doesn\'t seem to have a valid mobile phone number</string>
+
+
+    <string name="preferences_destination_sms">Configure Hero Contact</string>
+    <string name="preferences_destination_sms_summary">A call button with this emergency contact will appear on your lost phone\'s screen when you lock it with Prey</string>
+    <string name="change">Change</string>
+    <string name="call_hero">Call Hero</string>
+    <string name="remove">Remove</string>
 </resources>

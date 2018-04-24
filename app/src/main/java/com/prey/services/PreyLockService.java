@@ -6,12 +6,18 @@
  ******************************************************************************/
 package com.prey.services;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,8 +29,11 @@ import android.widget.Toast;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.R;
+import com.prey.actions.call.EndCallListener;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
+
+import java.lang.reflect.Method;
 
 public class PreyLockService extends Service{
 
@@ -68,6 +77,26 @@ public class PreyLockService extends Service{
             btn_unlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    PreyLogger.i("btn_stopcall");
+
+                    TelephonyManager tm = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                    try {
+                        Class c = Class.forName(tm.getClass().getName());
+                        Method m = c.getDeclaredMethod("getITelephony");
+                        m.setAccessible(true);
+                        Object telephonyService = m.invoke(tm);
+
+                        c = Class.forName(telephonyService.getClass().getName());
+                        m = c.getDeclaredMethod("endCall");
+                        m.setAccessible(true);
+                        m.invoke(telephonyService);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                    /*
                     try {
                         String key = editText.getText().toString().trim();
                         PreyLogger.i("unlock key:"+key+" unlock:"+unlock);
@@ -94,9 +123,34 @@ public class PreyLockService extends Service{
                             editText.setText("");
                         }
                     } catch (Exception e) {
-                    }
+                    }*/
                 }
             });
+
+            final Button btn_call = (Button) this.view.findViewById(R.id.Button_Call);
+            btn_call.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  PreyLogger.i("btn_call");
+                                                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                                                      if(getApplicationContext().checkSelfPermission( Manifest.permission.CALL_PHONE ) == PackageManager.PERMISSION_GRANTED) {
+                                                          Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                                          callIntent.setData(Uri.parse("tel:"+PreyConfig.getPreyConfig(getApplicationContext()).getDestinationSmsNumber()));
+                                                          startActivity(callIntent);
+
+
+                                                          EndCallListener callListener = new EndCallListener();
+                                                          TelephonyManager mTM = (TelephonyManager) getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+                                                          mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+
+
+
+
+                                                      }
+                                                  }
+                                              }
+            });
+
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;

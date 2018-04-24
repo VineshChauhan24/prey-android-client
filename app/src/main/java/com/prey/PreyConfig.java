@@ -14,7 +14,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.PermissionChecker;
 import android.telephony.TelephonyManager;
@@ -28,6 +31,11 @@ import com.prey.net.PreyWebServices;
 import com.prey.services.PreyDisablePowerOptionsService;
 import com.prey.services.PreyRegistrationIntentService;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -1052,4 +1060,64 @@ public class PreyConfig {
     public long getLastTimeSecureLock(){
         return getLong(PreyConfig.LAST_TIME_SECURE_LOCK, 0);
     }
+
+
+    public String getDestinationSmsName() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return settings.getString(PreyConfig.PREFS_DESTINATION_SMS_NAME, "");
+    }
+
+    public void saveDestinationSmsName(String destinationSmsName) {
+        this.saveString(PreyConfig.PREFS_DESTINATION_SMS_NAME, destinationSmsName);
+    }
+
+    public static final String PREFS_DESTINATION_SMS = "PREFS_DESTINATION_SMS";
+    public static final String PREFS_DESTINATION_SMS_NAME = "PREFS_DESTINATION_SMS_NAME";
+
+    public String getDestinationSmsNumber() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
+        return settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
+    }
+
+    public void saveDestinationSmsNumber(String destinationSms) {
+        this.saveString(PreyConfig.PREFS_DESTINATION_SMS, destinationSms);
+    }
+
+    public void saveDestinationSmsPicture(Bitmap detinationSmsPicture){
+        File sd = Environment.getExternalStorageDirectory();
+        File dest = new File(sd, PICTURE_FILENAME);
+
+        try {
+            FileOutputStream out = new FileOutputStream(dest);
+            detinationSmsPicture.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteSmsPicture(){
+        File sd = Environment.getExternalStorageDirectory();
+        File dest = new File(sd, PICTURE_FILENAME);
+        dest.delete();
+    }
+    private static final String PICTURE_FILENAME = "PICTURE_FILENAME";
+
+
+    public Bitmap getDestinationSmsPicture(){
+        File sd = Environment.getExternalStorageDirectory();
+        File dest = new File(sd, PICTURE_FILENAME);
+        try {
+            FileInputStream is = new FileInputStream(dest);
+            BufferedInputStream bis = new BufferedInputStream(is);
+            return BitmapFactory.decodeStream(bis);
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
+
+
+
 }
