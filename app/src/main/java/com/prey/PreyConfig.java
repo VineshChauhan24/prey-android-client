@@ -1062,34 +1062,34 @@ public class PreyConfig {
     }
 
 
-    public String getDestinationSmsName() {
+    public String getDestinationHeroName() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return settings.getString(PreyConfig.PREFS_DESTINATION_SMS_NAME, "");
+        return settings.getString(PreyConfig.PREFS_DESTINATION_HERO_NAME, "");
     }
 
-    public void saveDestinationSmsName(String destinationSmsName) {
-        this.saveString(PreyConfig.PREFS_DESTINATION_SMS_NAME, destinationSmsName);
+    public void saveDestinationHeroName(String destinationSmsName) {
+        this.saveString(PreyConfig.PREFS_DESTINATION_HERO_NAME, destinationSmsName);
     }
 
-    public static final String PREFS_DESTINATION_SMS = "PREFS_DESTINATION_SMS";
-    public static final String PREFS_DESTINATION_SMS_NAME = "PREFS_DESTINATION_SMS_NAME";
+    public static final String PREFS_DESTINATION_HERO = "PREFS_DESTINATION_HERO";
+    public static final String PREFS_DESTINATION_HERO_NAME = "PREFS_DESTINATION_HERO_NAME";
 
-    public String getDestinationSmsNumber() {
+    public String getDestinationHeroNumber() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return settings.getString(PreyConfig.PREFS_DESTINATION_SMS, "");
+        return settings.getString(PreyConfig.PREFS_DESTINATION_HERO, "");
     }
 
-    public void saveDestinationSmsNumber(String destinationSms) {
-        this.saveString(PreyConfig.PREFS_DESTINATION_SMS, destinationSms);
+    public void saveDestinationHeroNumber(String destinationHero) {
+        this.saveString(PreyConfig.PREFS_DESTINATION_HERO, destinationHero);
     }
 
-    public void saveDestinationSmsPicture(Bitmap detinationSmsPicture){
+    public void saveDestinationHeroPicture(Bitmap detinationHeroPicture){
         File sd = Environment.getExternalStorageDirectory();
         File dest = new File(sd, PICTURE_FILENAME);
 
         try {
             FileOutputStream out = new FileOutputStream(dest);
-            detinationSmsPicture.compress(Bitmap.CompressFormat.PNG, 90, out);
+            detinationHeroPicture.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
         } catch (Exception e) {

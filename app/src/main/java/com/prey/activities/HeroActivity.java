@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prey.PreyLogger;
-import com.prey.PreyPermission;
 import com.prey.PreyStatus;
 import com.prey.PreyUtils;
 import com.prey.contacts.ContactAccessor;
@@ -28,7 +27,7 @@ import com.prey.contacts.ContactInfo;
 import com.prey.exceptions.SMSNotSendException;
 import com.prey.sms.SMSSupport;
 import com.prey.R;
-public class SMSContactActivity extends PreyActivity {
+public class HeroActivity extends PreyActivity {
 
     private static final int PICK_CONTACT_REQUEST = 0;
     ContactAccessor contactAccesor = new ContactAccessor();
@@ -36,8 +35,8 @@ public class SMSContactActivity extends PreyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sms);
-        fillScreenInfo(getPreyConfig().getDestinationSmsName(), getPreyConfig().getDestinationSmsNumber(),null);
+        setContentView(R.layout.hero);
+        fillScreenInfo(getPreyConfig().getDestinationHeroName(), getPreyConfig().getDestinationHeroNumber(),null);
 
         View.OnClickListener launchContactPicker = new View.OnClickListener() {
             public void onClick(View v) {
@@ -45,24 +44,24 @@ public class SMSContactActivity extends PreyActivity {
             }
         };
 
-        Button change = (Button) findViewById(R.id.sms_btn_change);
+        Button change = (Button) findViewById(R.id.hero_btn_change);
         change.setOnClickListener(launchContactPicker);
 
-        ImageView picture = (ImageView) findViewById(R.id.sms_sheriff);
+        ImageView picture = (ImageView) findViewById(R.id.hero_sheriff);
         picture.setOnClickListener(launchContactPicker);
 
-        Button ok = (Button) findViewById(R.id.sms_btn_accept);
+        Button ok = (Button) findViewById(R.id.hero_btn_accept);
         ok.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 close();
             }
         });
 
-        Button remove = (Button) findViewById(R.id.sms_btn_remove);
+        Button remove = (Button) findViewById(R.id.hero_btn_remove);
         remove.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getPreyConfig().saveDestinationSmsNumber("");
-                getPreyConfig().saveDestinationSmsName("");
+                getPreyConfig().saveDestinationHeroNumber("");
+                getPreyConfig().saveDestinationHeroName("");
                 getPreyConfig().deleteSmsPicture();
                 fillScreenInfo("","",null);
             }
@@ -98,7 +97,7 @@ public class SMSContactActivity extends PreyActivity {
     }
 
     private void close(){
-        Intent intent = new Intent(SMSContactActivity.this, PreyConfigurationActivity.class);
+        Intent intent = new Intent(HeroActivity.this, PreyConfigurationActivity.class);
         PreyStatus.getInstance().setPreyConfigurationActivityResume(true);
         startActivity(intent);
         finish();
@@ -114,39 +113,7 @@ public class SMSContactActivity extends PreyActivity {
             loadContactInfo(data.getData());
     }
 
-    private void showContactNowAlert() {
-        try{
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(SMSContactActivity.this);
-            try{
-                alertDialog.setTitle(getText(R.string.hero_chosen));
-            }catch(Exception e){
-            }
-            try{
-                alertDialog.setMessage(getString(R.string.notify_your_hero_now,getPreyConfig().getDestinationSmsName()));
-            }catch(Exception e){
-            }
-            alertDialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog,int which) {
-                    String deviceType = PreyUtils.getDeviceType(SMSContactActivity.this).toLowerCase();
-                    try {
-                        SMSSupport.sendSMS(getPreyConfig().getDestinationSmsNumber(), getString(R.string.hero_notification_message,deviceType));
-                    } catch (SMSNotSendException e) {
-                        Toast.makeText(SMSContactActivity.this, R.string.sms_not_sent, Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
 
-            alertDialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            alertDialog.show();
-        }catch(Exception e){
-
-        }
-
-    }
 
     private void loadContactInfo(Uri contactUri) {
 
@@ -166,7 +133,7 @@ public class SMSContactActivity extends PreyActivity {
             @Override
             protected void onPostExecute(ContactInfo result) {
                 bindView(result);
-                //showContactNowAlert();
+
             }
         };
         task.execute(contactUri);
@@ -178,27 +145,27 @@ public class SMSContactActivity extends PreyActivity {
         Bitmap contactPhoto = contactInfo.getPicture();
 
         if (contactNumber != null && PhoneNumberUtils.isWellFormedSmsAddress(contactNumber)) {
-            getPreyConfig().saveDestinationSmsNumber(contactNumber);
-            getPreyConfig().saveDestinationSmsName(contactName);
-            getPreyConfig().saveDestinationSmsPicture(contactPhoto);
+            getPreyConfig().saveDestinationHeroNumber(contactNumber);
+            getPreyConfig().saveDestinationHeroName(contactName);
+            getPreyConfig().saveDestinationHeroPicture(contactPhoto);
             fillScreenInfo(contactName, contactNumber,contactPhoto);
-            PreyLogger.d("SMS contact stored: " + contactInfo.getDisplayName() + " - " + contactInfo.getPhoneNumber());
+            PreyLogger.d("Hero contact stored: " + contactInfo.getDisplayName() + " - " + contactInfo.getPhoneNumber());
         }
         else {
-            Toast.makeText(SMSContactActivity.this, R.string.preferences_destination_sms_not_valid, Toast.LENGTH_LONG).show();
+            Toast.makeText(HeroActivity.this, R.string.preferences_destination_hero_not_valid, Toast.LENGTH_LONG).show();
         }
     }
 
     private void fillScreenInfo(String name, String number, Bitmap photo){
         if (name == null || name.equals(""))
             name = getString(R.string.no_hero_selected);
-        ((TextView) findViewById(R.id.sms_contact_text)).setText(name);
-        ((TextView) findViewById(R.id.sms_contact_number)).setText(PhoneNumberUtils.formatNumber(number));
+        ((TextView) findViewById(R.id.hero_contact_text)).setText(name);
+        ((TextView) findViewById(R.id.hero_contact_number)).setText(PhoneNumberUtils.formatNumber(number));
         Bitmap b = getPreyConfig().getDestinationSmsPicture();
         if (b!= null)
-            ((ImageView) findViewById(R.id.sms_sheriff)).setImageBitmap(b);
+            ((ImageView) findViewById(R.id.hero_sheriff)).setImageBitmap(b);
         else
-            ((ImageView) findViewById(R.id.sms_sheriff)).setImageResource(R.drawable.sheriff);
+            ((ImageView) findViewById(R.id.hero_sheriff)).setImageResource(R.drawable.sheriff);
     }
 
 }

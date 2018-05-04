@@ -11,6 +11,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -19,10 +22,12 @@ import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +45,8 @@ public class PreyLockService extends Service{
     private WindowManager windowManager;
     private View view;
 
+    private int estado=0;
+    private ImageView recovery_call;
 
     public PreyLockService(){
 
@@ -64,41 +71,34 @@ public class PreyLockService extends Service{
         if(unlock!=null&&!"".equals(unlock)) {
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.lock_android7, null);
-            Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
-            TextView textView1 = (TextView) view.findViewById(R.id.TextView_Lock_AccessDenied);
-            textView1.setTypeface(regularMedium);
+            view = inflater.inflate(R.layout.super_lock2, null);
             Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.ttf");
-            EditText editText1 = (EditText) view.findViewById(R.id.EditText_Lock_Password);
-            editText1.setTypeface(regularMedium);
+            Typeface regularMedium = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-medium.ttf");
 
-            final EditText editText = (EditText) this.view.findViewById(R.id.EditText_Lock_Password);
-            final Button btn_unlock = (Button) this.view.findViewById(R.id.Button_Lock_Unlock);
-            btn_unlock.setOnClickListener(new View.OnClickListener() {
+
+            TextView textView_title = (TextView) view.findViewById(R.id.textView_title);
+            textView_title.setTypeface(regularBold);
+            TextView textView_body = (TextView) view.findViewById(R.id.textView_body);
+            textView_body.setTypeface(regularMedium);
+            final EditText editTextEnterPassword = (EditText) view.findViewById(R.id.editTextEnterPassword);
+            editTextEnterPassword.setTypeface(regularMedium);
+            editTextEnterPassword.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.setFocusable(true);
+                    v.setFocusableInTouchMode(true);
+                    return false;
+                }
+            });
+
+            final ImageView btn_lock = (ImageView) this.view.findViewById(R.id.btn_lock);
+            btn_lock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PreyLogger.i("btn_stopcall");
+                    PreyLogger.i("btn_lock");
 
-                    TelephonyManager tm = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
                     try {
-                        Class c = Class.forName(tm.getClass().getName());
-                        Method m = c.getDeclaredMethod("getITelephony");
-                        m.setAccessible(true);
-                        Object telephonyService = m.invoke(tm);
-
-                        c = Class.forName(telephonyService.getClass().getName());
-                        m = c.getDeclaredMethod("endCall");
-                        m.setAccessible(true);
-                        m.invoke(telephonyService);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                    /*
-                    try {
-                        String key = editText.getText().toString().trim();
+                        String key = editTextEnterPassword.getText().toString().trim();
                         PreyLogger.i("unlock key:"+key+" unlock:"+unlock);
                         if (unlock.equals(key)) {
                             String jobIdLock=PreyConfig.getPreyConfig(ctx).getJobIdLock();
@@ -120,36 +120,68 @@ public class PreyLockService extends Service{
                                 }
                             }.start();
                         } else {
-                            editText.setText("");
+                            editTextEnterPassword.setText("");
+                            editTextEnterPassword.setBackgroundColor(Color.RED);
+
+
                         }
                     } catch (Exception e) {
-                    }*/
+                    }
+
+
                 }
             });
 
-            final Button btn_call = (Button) this.view.findViewById(R.id.Button_Call);
-            btn_call.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-                                                  PreyLogger.i("btn_call");
-                                                  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                                                      if(getApplicationContext().checkSelfPermission( Manifest.permission.CALL_PHONE ) == PackageManager.PERMISSION_GRANTED) {
-                                                          Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                                          callIntent.setData(Uri.parse("tel:"+PreyConfig.getPreyConfig(getApplicationContext()).getDestinationSmsNumber()));
-                                                          startActivity(callIntent);
+            recovery_call = (ImageView) this.view.findViewById(R.id.recovery_call);
+
+            String number=PreyConfig.getPreyConfig(getApplicationContext()).getDestinationHeroNumber();
+            if(number==null||"".equals(number)){
+                recovery_call.setVisibility(View.INVISIBLE);
+            }else {
+
+                recovery_call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PreyLogger.i("btn_call state:" + estado);
+                        if (estado == 1 || estado == 2) {
+                            TelephonyManager tm = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                            try {
+                                Class c = Class.forName(tm.getClass().getName());
+                                Method m = c.getDeclaredMethod("getITelephony");
+                                m.setAccessible(true);
+                                Object telephonyService = m.invoke(tm);
+
+                                c = Class.forName(telephonyService.getClass().getName());
+                                m = c.getDeclaredMethod("endCall");
+                                m.setAccessible(true);
+                                m.invoke(telephonyService);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            PreyLogger.i("stop call");
+                            Bitmap bImage = BitmapFactory.decodeResource(getResources(), R.drawable.recovery_call_en);
+                            recovery_call.setImageBitmap(bImage);
+                        } else {
+                            estado = 0;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (getApplicationContext().checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                    callIntent.setData(Uri.parse("tel:" + PreyConfig.getPreyConfig(getApplicationContext()).getDestinationHeroNumber()));
+                                    startActivity(callIntent);
 
 
-                                                          EndCallListener callListener = new EndCallListener();
-                                                          TelephonyManager mTM = (TelephonyManager) getApplication().getSystemService(Context.TELEPHONY_SERVICE);
-                                                          mTM.listen(callListener, PhoneStateListener.LISTEN_CALL_STATE);
+                                    EndCallListener callListener = new EndCallListener();
+                                    TelephonyManager mTM = (TelephonyManager) getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+                                    mTM.listen(new PreyPhoneStateListener(), PhoneStateListener.LISTEN_CALL_STATE);
 
 
-
-
-                                                      }
-                                                  }
-                                              }
-            });
+                                }
+                            }
+                        }
+                    }
+                });
+            }
 
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
@@ -178,4 +210,34 @@ public class PreyLockService extends Service{
         }
     }
 
+    class PreyPhoneStateListener extends PhoneStateListener {
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            if(TelephonyManager.CALL_STATE_RINGING == state) {
+                PreyLogger.i(  "RINGING2, number: " + incomingNumber);
+
+                Bitmap bImage = BitmapFactory.decodeResource(getResources(), R.drawable.recovery_call_end_en);
+                recovery_call.setImageBitmap(bImage);
+                estado=1;
+
+            }
+            if(TelephonyManager.CALL_STATE_OFFHOOK == state) {
+                //wait for phone to go offhook (probably set a boolean flag) so you know your app initiated the call.
+                PreyLogger.i(  "OFFHOOK2");
+
+
+                Bitmap bImage = BitmapFactory.decodeResource(getResources(), R.drawable.recovery_call_end_en);
+                recovery_call.setImageBitmap(bImage);
+                estado=2;
+            }
+            if(TelephonyManager.CALL_STATE_IDLE == state) {
+                //when this state occurs, and your flag is set, restart your app
+                PreyLogger.i( "IDLE2");
+                Bitmap bImage = BitmapFactory.decodeResource(getResources(), R.drawable.recovery_call_en);
+                recovery_call.setImageBitmap(bImage);
+                estado=3;
+            }
+        }
+    }
 }
+

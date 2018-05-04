@@ -8,6 +8,7 @@ package com.prey;
 
 import android.app.Application;
 import android.content.Intent;
+import android.util.Log;
 
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
@@ -23,6 +24,9 @@ import com.prey.services.PreyDisablePowerOptionsService;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
+
+import com.appsflyer.*;
 
 public class PreyApp extends Application {
 
@@ -106,6 +110,67 @@ public class PreyApp extends Application {
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);
         }
+
+
+
+        AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
+
+            /* Returns the attribution data. Note - the same conversion data is returned every time per install */
+            @Override
+            public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
+                for (String attrName : conversionData.keySet()) {
+                    PreyLogger.i("attribute: " + attrName + " = " + conversionData.get(attrName));
+                }
+                setInstallData(conversionData);
+            }
+
+            @Override
+            public void onInstallConversionFailure(String errorMessage) {
+                PreyLogger.i( "error getting conversion data: " + errorMessage);
+            }
+
+            /* Called only when a Deep Link is opened */
+            @Override
+            public void onAppOpenAttribution(Map<String, String> conversionData) {
+                for (String attrName : conversionData.keySet()) {
+                    PreyLogger.i( "attribute: " + attrName + " = " + conversionData.get(attrName));
+                }
+            }
+
+            @Override
+            public void onAttributionFailure(String errorMessage) {
+                PreyLogger.i( "error onAttributionFailure : " + errorMessage);
+            }
+        };
+
+
+        /* This API enables AppsFlyer to detect installations, sessions, and updates. */
+
+        AppsFlyerLib.getInstance().init(AF_DEV_KEY , conversionListener , getApplicationContext());
+        AppsFlyerLib.getInstance().startTracking(this, AF_DEV_KEY);
+
+
+        /* Set to true to see the debug logs. Comment out or set to false to stop the function */
+
+        AppsFlyerLib.getInstance().setDebugLog(true);
     }
+
+    public static String InstallConversionData =  "";
+    public static int sessionCount = 0;
+    private static final String AF_DEV_KEY = "pzZcjLhYQ5emA8XLvSKNub";
+    public static void setInstallData(Map<String, String> conversionData){
+        if(sessionCount == 0){
+            final String install_type = "Install Type: " + conversionData.get("af_status") + "\n";
+            final String media_source = "Media Source: " + conversionData.get("media_source") + "\n";
+            final String install_time = "Install Time(GMT): " + conversionData.get("install_time") + "\n";
+            final String click_time = "Click Time(GMT): " + conversionData.get("click_time") + "\n";
+            final String is_first_launch = "Is First Launch: " + conversionData.get("is_first_launch") + "\n";
+            InstallConversionData += install_type + media_source + install_time + click_time + is_first_launch;
+            sessionCount++;
+        }
+
+    }
+
+
 
 }

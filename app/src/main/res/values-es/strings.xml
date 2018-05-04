@@ -282,19 +282,21 @@
 
 
 
-    <string name="hero_chosen">Hero chosen!</string>
+    <string name="hero_chosen">¡Héroe elegido!</string>
     <string name="choose_your_hero">ELIGE TU HÉROE</string>
-    <string name="no_hero_selected">No hero selected</string>
+    <string name="no_hero_selected">Ningún héroe seleccionado</string>
     <string name="your_hero_text">La persona que elijas será tu contacto de emergencia en caso de que se pierda este móvil. Quien lo encuentre sólo podrá llamar a este número</string>
-    <string name="sms_not_sent">There was an error sending the message. Does your device have SMS support?</string>
-    <string name="notify_your_hero_now">Good choice! Would you like to let %s know you\'ve selected him as your hero? We\'ll send a quick SMS message.</string>
-    <string name="hero_notification_message">I just chose you as my Prey Hero for my Android %s! So if someone else replaces my SIM card you\'ll be notified by SMS. Check out preyproject.com/hero!</string>
-    <string name="preferences_destination_sms_not_valid">The contact you entered doesn\'t seem to have a valid mobile phone number</string>
-
-
-    <string name="preferences_destination_sms">Configurar Contacto Héroe</string>
-    <string name="preferences_destination_sms_summary">Al bloquear un móvil perdido con Prey, aparecerá un botón de llamada con este contacto de emergencia</string>
-    <string name="change">Change</string>
-    <string name="call_hero">Call Hero</string>
+    <string name="preferences_destination_hero">Configurar Contacto Héroe</string>
+    <string name="preferences_destination_hero_summary">Al bloquear un móvil perdido con Prey, aparecerá un botón de llamada con este contacto de emergencia</string>
+    <string name="preferences_destination_hero_not_valid">El contacto que ingresó no parece tener un número de teléfono móvil válido</string>
+    <string name="change">Cambiar</string>
+    <string name="call_hero">Llamar a Héroe</string>
     <string name="remove">Borrar</string>
+
+
+    <string name="new_lock_title">ACCESS DENIED</string>
+    <string name="new_lock_body">This device is lost! The owner\nhas locked it to protect his\nprivacy, got a hero in you?</string>
+    <string name="new_lock_hint">Enter the password to unlock</string>
+
+
 </resources>

@@ -79,8 +79,8 @@ public class PreyWebServices {
         parameters.put("password", password);
         parameters.put("password_confirmation", password);
         parameters.put("country_name", Locale.getDefault().getDisplayCountry());
-        parameters.put("policy_rule_age", "true");
-        parameters.put("policy_rule_privacy_terms", "true");
+      //  parameters.put("policy_rule_age", "true");
+      //  parameters.put("policy_rule_privacy_terms", "true");
 
         PreyHttpResponse response = null;
         String xml = "";

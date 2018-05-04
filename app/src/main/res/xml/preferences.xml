@@ -59,9 +59,9 @@
         <Preference
 
             android:key="PREFS_DESTINATION_SMS"
-            android:summary="@string/preferences_destination_sms_summary"
-            android:title="@string/preferences_destination_sms" >
-            <intent android:action="com.prey.activities.SEND_SMS_CONF" />
+            android:summary="@string/preferences_destination_hero_summary"
+            android:title="@string/preferences_destination_hero" >
+            <intent android:action="com.prey.activities.SEND_HERO_CONF" />
         </Preference>
 
     </PreferenceCategory>

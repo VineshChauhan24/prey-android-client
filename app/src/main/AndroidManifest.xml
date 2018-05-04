@@ -91,6 +91,7 @@
             android:value="barcode" />
 
 
+
         <activity
             android:name="com.prey.activities.LoginActivity"
             android:clearTaskOnLaunch="true"
@@ -100,11 +101,26 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name="com.prey.activities.LockActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            >
+
         </activity>
 
         <activity
@@ -264,10 +280,10 @@
 
 
         <activity
-            android:name="com.prey.activities.SMSContactActivity"
+            android:name="com.prey.activities.HeroActivity"
             android:configChanges="keyboardHidden" >
             <intent-filter>
-                <action android:name="com.prey.activities.SEND_SMS_CONF" />
+                <action android:name="com.prey.activities.SEND_HERO_CONF" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
