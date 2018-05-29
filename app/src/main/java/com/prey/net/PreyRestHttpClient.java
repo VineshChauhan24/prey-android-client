@@ -46,10 +46,10 @@ public class PreyRestHttpClient {
     private static final String CONTENT_TYPE_URL_ENCODED="application/x-www-form-urlencoded";
 
     public PreyHttpResponse post(String url, Map<String, String> params) throws Exception {
-        PreyLogger.d("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
+        PreyLogger.i("Sending using 'POST' - URI: " + url + " - parameters: " + params.toString());
         PreyHttpResponse response=UtilConnection.connectionPost(PreyConfig.getPreyConfig(ctx),url,params,CONTENT_TYPE_URL_ENCODED);
 
-        PreyLogger.d("Response from server: " + (response==null?"":response.toString()));
+        PreyLogger.i("Response from server: " + (response==null?"":response.toString()));
         return response;
     }
 

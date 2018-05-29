@@ -116,11 +116,7 @@ public class EventFactory {
                             FileretrievalController.getInstance().run(ctx);
                         }
                     }.start();
-                    new Thread() {
-                        public void run() {
-                            OfflineController.getInstance().run(ctx);
-                        }
-                    }.start();
+
                 }
             } catch (Exception e) {
             }
@@ -143,11 +139,7 @@ public class EventFactory {
                             FileretrievalController.getInstance().run(ctx);
                         }
                     }.start();
-                    new Thread() {
-                        public void run() {
-                            OfflineController.getInstance().run(ctx);
-                        }
-                    }.start();
+
                 }
             } catch (Exception e) {
             }
@@ -182,11 +174,7 @@ public class EventFactory {
                             FileretrievalController.getInstance().run(ctx);
                         }
                     }.start();
-                    new Thread() {
-                        public void run() {
-                            OfflineController.getInstance().run(ctx);
-                        }
-                    }.start();
+
                 }
             }
         }

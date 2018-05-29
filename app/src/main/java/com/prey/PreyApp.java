@@ -10,6 +10,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
 
+import com.prey.actions.autoconnect.AutoConnectConfig;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
@@ -26,7 +27,7 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.Map;
 
-import com.appsflyer.*;
+
 
 public class PreyApp extends Application {
 
@@ -81,7 +82,9 @@ public class PreyApp extends Application {
                 }
                 new Thread() {
                     public void run() {
+                        PreySetting.getPreySetting(getApplicationContext()).setSetting();
                         AwareConfig.getAwareConfig(getApplicationContext()).init();
+                        AutoConnectConfig.getAutoConnectConfig(getApplicationContext()).init();
                     }
                 }.start();
                 new Thread() {
@@ -112,10 +115,10 @@ public class PreyApp extends Application {
         }
 
 
-
+/*
         AppsFlyerConversionListener conversionListener = new AppsFlyerConversionListener() {
 
-            /* Returns the attribution data. Note - the same conversion data is returned every time per install */
+            // Returns the attribution data. Note - the same conversion data is returned every time per install
             @Override
             public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
                 for (String attrName : conversionData.keySet()) {
@@ -129,7 +132,7 @@ public class PreyApp extends Application {
                 PreyLogger.i( "error getting conversion data: " + errorMessage);
             }
 
-            /* Called only when a Deep Link is opened */
+            // Called only when a Deep Link is opened
             @Override
             public void onAppOpenAttribution(Map<String, String> conversionData) {
                 for (String attrName : conversionData.keySet()) {
@@ -143,16 +146,16 @@ public class PreyApp extends Application {
             }
         };
 
-
+*/
         /* This API enables AppsFlyer to detect installations, sessions, and updates. */
 
-        AppsFlyerLib.getInstance().init(AF_DEV_KEY , conversionListener , getApplicationContext());
-        AppsFlyerLib.getInstance().startTracking(this, AF_DEV_KEY);
+//        AppsFlyerLib.getInstance().init(AF_DEV_KEY , conversionListener , getApplicationContext());
+//        AppsFlyerLib.getInstance().startTracking(this, AF_DEV_KEY);
 
 
         /* Set to true to see the debug logs. Comment out or set to false to stop the function */
 
-        AppsFlyerLib.getInstance().setDebugLog(true);
+  //      AppsFlyerLib.getInstance().setDebugLog(true);
     }
 
     public static String InstallConversionData =  "";

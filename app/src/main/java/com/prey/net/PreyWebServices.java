@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -71,27 +72,34 @@ public class PreyWebServices {
      */
     public PreyAccountData registerNewAccount(Context ctx, String name, String email, String password, String deviceType) throws Exception {
 
-
+        PreyLogger.i("registerNewAccount ");
         HashMap<String, String> parameters = new HashMap<String, String>();
 
-        parameters.put("name", name);
-        parameters.put("email", email);
-        parameters.put("password", password);
-        parameters.put("password_confirmation", password);
-        parameters.put("country_name", Locale.getDefault().getDisplayCountry());
-      //  parameters.put("policy_rule_age", "true");
-      //  parameters.put("policy_rule_privacy_terms", "true");
+         parameters.put("name", name);
+         parameters.put("email", email);
+            parameters.put("password", password);
+          parameters.put("password_confirmation", password);
+          parameters.put("country_name", Locale.getDefault().getDisplayCountry());
 
+
+         parameters.put("policy_rule_age", "true");
+         parameters.put("policy_rule_privacy_terms", "true");
+         parameters.put("lang",Locale.getDefault().getLanguage());
+
+
+        PreyLogger.d("lang:"+ Locale.getDefault().getLanguage());
         PreyHttpResponse response = null;
         String xml = "";
+        int statusCode = -1;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("signup.json");
-            PreyLogger.d("url:"+url);
+            String url =PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("signup.json");
+            PreyLogger.d("registerNewAccount url:"+url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
             if(response!=null) {
-                xml = response.getResponseAsString();
-                PreyLogger.d("code:" + response.getStatusCode() + "xml:" + xml);
+                statusCode = response.getStatusCode();
+                xml = formtOut(response.getResponseAsString(),statusCode);
+                PreyLogger.d("code_:" + statusCode + " xml:" + xml);
             }else{
                 PreyLogger.d("response nulo");
             }
@@ -110,12 +118,8 @@ public class PreyWebServices {
 
             }
         } else {
-
-            if (response != null && response.getStatusCode() > 299) {
-                if (response.getStatusCode() == 422 && xml.indexOf("already") > 0) {
-                    throw new PreyException(ctx.getString(R.string.error_already_register));
-                }
-                throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + response.getStatusCode() + "]"));
+            if (response != null && statusCode > 299) {
+                throw new PreyException("["+statusCode+"]"+xml);
             } else {
                 throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, ""));
             }
@@ -129,7 +133,6 @@ public class PreyWebServices {
                 JSONObject jsnobject = new JSONObject(xmlDeviceId);
                 deviceId = jsnobject.getString("key");
             } catch (Exception e) {
-
             }
         } else {
             throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, ""));
@@ -145,6 +148,29 @@ public class PreyWebServices {
     }
 
 
+
+    public String formtOut(String in,int statusCode){
+        String out=in;
+        if(statusCode!=201&&statusCode!=200){
+            try {
+                JSONObject json = new JSONObject(in);
+                out="\n";
+                Iterator<String> it=json.keys();
+                while(it.hasNext()){
+                    String key=it.next();
+                    String value=json.getString(key);
+                    value=value.replace("[","");
+                    value=value.replace("]","");
+                    value=value.replace("\"","");
+                    out+= key+" : "+value+"\n";
+                }
+            }catch (Exception e){
+                out=in;
+            }
+        }
+        PreyLogger.d("formtOut:"+out);
+        return out;
+    }
     /**
      * Register a new device for a given API_KEY, needed just after obtain the
      * new API_KEY.
@@ -177,11 +203,12 @@ public class PreyWebServices {
         String imei = new PreyPhone(ctx).getHardware().getAndroidDeviceId();
         parameters.put("physical_address", imei);
 
+        //parameters.put("lang", Locale.getDefault().getLanguage());
         PreyHttpResponse response = null;
 
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
-            PreyLogger.d("url:" + url);
+            String url =  PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("devices.json");
+            PreyLogger.d("url___-:" + url);
             response = PreyRestHttpClient.getInstance(ctx).post(url, parameters);
             if (response == null) {
                 throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, "[" + -1 + "]"));
@@ -206,13 +233,17 @@ public class PreyWebServices {
         PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
         HashMap<String, String> parameters = new HashMap<String, String>();
         PreyHttpResponse response = null;
-        String xml;
+        String xml="";
+        int statusCode=-1;
         try {
             String apiv2 = FileConfigReader.getInstance(ctx).getApiV2();
-            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.xml");
-            PreyLogger.d("_____url:" + url);
+            String url = PreyConfig.getPreyConfig(ctx).getPreyUrl().concat(apiv2).concat("profile.json?lang="+Locale.getDefault().getLanguage());
+
+            PreyLogger.d("_..____url:" + url+" "+email+" "+password);
             response = PreyRestHttpClient.getInstance(ctx).get(url, parameters, email, password);
-            xml = response.getResponseAsString();
+            statusCode = response.getStatusCode();
+            xml = formtOut(response.getResponseAsString(),statusCode);
+
             PreyLogger.d("xml:" + xml);
         } catch (Exception e) {
             PreyLogger.e("Error!"+e.getMessage(), e);
@@ -220,19 +251,18 @@ public class PreyWebServices {
         }
         String status = "";
         if (response != null  ) {
-            status = "[" + response.getStatusCode() + "]";
+            status = "[" + statusCode + "]";
         }
-        if (!xml.contains("<key")) {
-            throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, status));
+        if (!xml.contains("\"key\"")) {
+            throw new PreyException("["+statusCode+"]"+xml);
         }
 
         int from;
         int to;
         String apiKey;
         try {
-            from = xml.indexOf("<key>") + 5;
-            to = xml.indexOf("</key>");
-            apiKey = xml.substring(from, to);
+            JSONObject json=new JSONObject(xml);
+            apiKey = json.getString("key");
         } catch (Exception e) {
             throw new PreyException(ctx.getString(R.string.error_cant_add_this_device, status));
         }
@@ -790,6 +820,7 @@ public class PreyWebServices {
             if (response !=null){
                 String responseAsString=response.getResponseAsString();
                 if (responseAsString != null ) {
+                    PreyLogger.i("___________responseAsString:"+responseAsString);
                     jsnobject = new JSONObject(response.getResponseAsString());
                 }
             }

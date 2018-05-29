@@ -9,6 +9,7 @@ package com.prey.actions.alert;
 import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyStatus;
+import com.prey.actions.wifi.WifiConnect;
 import com.prey.activities.PopUpAlertActivity;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -32,6 +33,14 @@ public class AlertThread extends Thread {
     }
 
     public void run() {
+        String reason=null;
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("start", "alert", "started",reason));
+
+        new WifiConnect(ctx).scan();
+        PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("stop", "alert", "stopped",reason));
+
+    }
+    public void run2() {
         try {
             PreyLogger.d("started alert");
             String title = "title";

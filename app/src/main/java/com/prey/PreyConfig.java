@@ -172,6 +172,7 @@ public class PreyConfig {
 
 
     public static final String AWARE="aware";
+    public static final String AUTO_CONNECT="auto_connect";
 
     private boolean securityPrivilegesAlreadyPrompted;
 
@@ -1117,7 +1118,12 @@ public class PreyConfig {
         }
     }
 
+    public boolean getAutoConnect() {
+        return getBoolean(PreyConfig.AUTO_CONNECT, false);
+    }
 
-
+    public void setAutoConnect(boolean auto_connect) {
+        this.saveBoolean(PreyConfig.AUTO_CONNECT, auto_connect);
+    }
 
 }

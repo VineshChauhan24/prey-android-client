@@ -150,7 +150,6 @@ public class UtilConnection {
                     connection.addRequestProperty("X-Prey-Status", status);
                     PreyLogger.d("X-Prey-Status:"+status);
                 }
-
                 if (correlationId!=null) {
                     connection.addRequestProperty("X-Prey-Correlation-ID", correlationId);
                     PreyLogger.d("X-Prey-Correlation-ID:"+correlationId);
@@ -159,10 +158,7 @@ public class UtilConnection {
                     PreyLogger.d("X-Prey-Device-ID:"+deviceId);
                     connection.addRequestProperty("X-Prey-State", status);
                     PreyLogger.d("X-Prey-State:"+status);
-
                 }
-
-
                 connection.addRequestProperty("User-Agent", getUserAgent(preyConfig));
                 if (entityFiles==null&&(params!=null&&params.size()>0)){
                     OutputStream os = connection.getOutputStream();
@@ -243,10 +239,10 @@ public class UtilConnection {
                         retry = RETRIES;
                         break;
                     case HttpURLConnection.HTTP_GATEWAY_TIMEOUT:
-                        PreyLogger.d(uri + " **gateway timeout**");
+                        PreyLogger.d(uri + " **HTTP_GATEWAY_TIMEOUT timeout**");
                         break;
                     case HttpURLConnection.HTTP_UNAVAILABLE:
-                        PreyLogger.d(uri + "**unavailable**");
+                        PreyLogger.d(uri + "**HTTP_UNAVAILABLE**");
                         break;
                     case HttpURLConnection.HTTP_NOT_ACCEPTABLE:
                         PreyLogger.d(uri + " **NOT_ACCEPTABLE**");
@@ -255,6 +251,21 @@ public class UtilConnection {
                         break;
                     case HttpURLConnection.HTTP_UNAUTHORIZED:
                         PreyLogger.d(uri + " **HTTP_UNAUTHORIZED**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_BAD_REQUEST:
+                        PreyLogger.d(uri + " **HTTP_BAD_REQUEST**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_PAYMENT_REQUIRED:
+                        PreyLogger.d(uri + " **HTTP_PAYMENT_REQUIRED**");
+                        response = convertPreyHttpResponse(responseCode,connection);
+                        retry = RETRIES;
+                        break;
+                    case HttpURLConnection.HTTP_BAD_METHOD:
+                        PreyLogger.d(uri + " **HTTP_BAD_METHOD**");
                         response = convertPreyHttpResponse(responseCode,connection);
                         retry = RETRIES;
                         break;
@@ -276,12 +287,7 @@ public class UtilConnection {
         return response;
     }
 
-    public static boolean pageOffline(String uri){
-        if (uri!=null && uri.indexOf("devices.json")<0 && uri.indexOf("data.json")<0 && uri.indexOf("profile.xml")<0 && uri.indexOf("signup.json")<0){
-            return true;
-        }
-        return false;
-    }
+     
 
     private static void saveFile(String idFile,ByteArrayOutputStream outputStream){
         FileOutputStream fileOutputStream = null;
@@ -340,29 +346,33 @@ public class UtilConnection {
     }
 
     private static PreyHttpResponse convertPreyHttpResponse(int responseCode,HttpURLConnection connection)throws Exception {
-        StringBuffer sb = new StringBuffer();
-        if(responseCode==200||responseCode==201||responseCode==422) {
-            InputStream input = null;
-            if(responseCode==422){
-                input = connection.getErrorStream();
-            }else {
-                input = connection.getInputStream();
-            }
-            if (input != null) {
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(input));
+        StringBuffer sb = new StringBuffer("");
+        PreyLogger.d("convertPreyHttpResponse responseCode:"+responseCode);
+        InputStream input = null;
+        if (responseCode==200||responseCode==201) {
+            input = connection.getInputStream();
+        } else {
+            input = connection.getErrorStream();
+        }
+        if (input != null) {
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(input));
                 String decodedString;
-
                 while ((decodedString = in.readLine()) != null) {
                     sb.append(decodedString);
                     sb.append('\r');
                 }
-                in.close();
-                PreyLogger.d(sb.toString());
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (Exception e){}
             }
+            PreyLogger.d("convertPreyHttpResponse out:"+sb.toString());
         }
         Map<String, List<String>> mapHeaderFields=connection.getHeaderFields();
-
         connection.disconnect();
         return new PreyHttpResponse(responseCode,sb.toString(),mapHeaderFields);
     }

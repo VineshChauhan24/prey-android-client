@@ -9,9 +9,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.appsflyer.AFInAppEventParameterName;
-import com.appsflyer.AFInAppEventType;
-import com.appsflyer.AppsFlyerLib;
+
 import com.prey.PreyLogger;
 import com.prey.R;
 
@@ -39,9 +37,9 @@ public class LockActivity extends Activity {
             public void onClick(View v) {
                 PreyLogger.i("click btn_lock2");
                 Map<String, Object> eventValue = new HashMap<String, Object>();
-                eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD, "email");
+               // eventValue.put(AFInAppEventParameterName.REGSITRATION_METHOD, "email");
 
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.COMPLETE_REGISTRATION, eventValue);
+               // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.COMPLETE_REGISTRATION, eventValue);
 
 
 
@@ -54,8 +52,8 @@ public class LockActivity extends Activity {
                 PreyLogger.i("click recovery_call2");
                 Map<String, Object> eventValue = new HashMap<String, Object>();
 
-                eventValue.put(AFInAppEventParameterName.SUCCESS, true);
-                AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.LOGIN, eventValue);
+               // eventValue.put(AFInAppEventParameterName.SUCCESS, true);
+               // AppsFlyerLib.getInstance().trackEvent(getApplicationContext(), AFInAppEventType.LOGIN, eventValue);
 
 
 

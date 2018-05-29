@@ -72,7 +72,7 @@ public class SignUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        this.setContentView(R.layout.signup);
+        this.setContentView(R.layout.signup2);
         PreyLogger.i("onCreate of SignUpActivity");
 
         final EditText nameText=((EditText)findViewById(R.id.editTextName));
@@ -192,7 +192,8 @@ public class SignUpActivity extends Activity {
 
                 boolean confirm_over=checkBox_linear_confirm_over.isChecked();
                 boolean agree_terms_condition=checkBox_linear_agree_terms_condition.isChecked();
-                PreyLogger.i("email:"+email);
+                PreyLogger.i("");
+                PreyLogger.i("email_:"+email);
                 PreyLogger.i("password:"+password);
                 PreyLogger.i("confirm_over:"+confirm_over);
                 PreyLogger.i("agree_terms_condition:"+agree_terms_condition);
@@ -267,6 +268,7 @@ public class SignUpActivity extends Activity {
                     }
                 }.start();
             } catch (Exception e) {
+                PreyLogger.e("error CreateAccount: " + e.getMessage(),e);
                 error = e.getMessage();
             }
             return null;
