@@ -27,6 +27,7 @@ import com.prey.PreyConfig;
 import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
+import com.prey.actions.autoconnect.AutoConnectService;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.activities.CheckPasswordHtmlActivity;
 import com.prey.beta.actions.PreyBetaController;

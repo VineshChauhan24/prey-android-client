@@ -552,8 +552,8 @@ public class PreyConfig {
         if (deviceId != null && !"".equals(deviceId)) {
             try {
 
-                PreyLogger.d("______________________");
-                PreyLogger.d("___ registerC2dm _____");
+               // PreyLogger.d("______________________");
+                //PreyLogger.d("___ registerC2dm _____");
 
 
                 Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
@@ -562,7 +562,7 @@ public class PreyConfig {
 
                 registrationIntent.putExtra("sender", gcmId);
                 this.ctx.startService(registrationIntent);
-                PreyLogger.d("______________________");
+               // PreyLogger.d("______________________");
 
             } catch (Exception e) {
                 error = true;
@@ -572,16 +572,16 @@ public class PreyConfig {
             if (error) {
                 try {
 
-                    PreyLogger.d("______________________");
-                    PreyLogger.d("___ registerC2dm  2_____");
+                    //PreyLogger.d("______________________");
+                    //PreyLogger.d("___ registerC2dm  2_____");
 
 
-                    PreyLogger.d("starservice RegistrationIntentService");
+                    //PreyLogger.d("starservice RegistrationIntentService");
                     Intent intent = new Intent(ctx, PreyRegistrationIntentService.class);
                     ctx.startService(intent);
 
 
-                    PreyLogger.d("______________________");
+                   // PreyLogger.d("______________________");
 
                 } catch (Exception e) {
                     PreyLogger.e("Error :" + e.getMessage(), e);

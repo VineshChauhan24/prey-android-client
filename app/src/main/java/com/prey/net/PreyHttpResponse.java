@@ -29,9 +29,9 @@ public class PreyHttpResponse {
                 this.response=connection;
                 this.statusCode = connection.getResponseCode();
                 this.responseAsString = convertStreamToString(connection.getInputStream());
-             PreyLogger.d("responseAsString:"+responseAsString);
+             //PreyLogger.d("responseAsString:"+responseAsString);
         } catch (IOException e) {
-            PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
+            //PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
             this.responseAsString = "";
         }
     }
@@ -42,9 +42,9 @@ public class PreyHttpResponse {
             this.response=null;
             this.statusCode = statusCode;
             this.responseAsString = responseAsString;
-            PreyLogger.d("responseAsString:"+responseAsString);
+            //PreyLogger.d("responseAsString:"+responseAsString);
         } catch (Exception e) {
-            PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
+            //PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
             this.responseAsString = "";
         }
     }
@@ -57,9 +57,9 @@ public class PreyHttpResponse {
             this.statusCode = statusCode;
             this.responseAsString = responseAsString;
             this.mapHeaderFields = mapHeaderFields;
-            PreyLogger.d("responseAsString:"+responseAsString);
+            //PreyLogger.d("responseAsString:"+responseAsString);
         } catch (Exception e) {
-            PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
+            //PreyLogger.d("Can't receive body stream from http connection, setting response string as ''");
             this.responseAsString = "";
         }
     }

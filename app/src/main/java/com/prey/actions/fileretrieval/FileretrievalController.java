@@ -34,7 +34,7 @@ public class FileretrievalController {
     }
 
     public void run(Context ctx){
-        PreyLogger.d("______________ FileretrievalController run _____________________");
+        //PreyLogger.d("______________ FileretrievalController run _____________________");
 
         boolean connect = false;
 
@@ -42,14 +42,14 @@ public class FileretrievalController {
         do {
             connect = (PreyConfig.getPreyConfig(ctx).isConnectionExists()|| PreyWifiManager.getInstance(ctx).isOnline());
 
-            PreyLogger.d("______________ FileretrievalController connect2+"+connect+" _____________________");
+            //PreyLogger.d("______________ FileretrievalController connect2+"+connect+" _____________________");
             if (connect) {
                 break;
             } else {
                 try{Thread.sleep(2000);}catch(Exception e){}
             }
             j++;
-        }while(j<10);
+        }while(j<2);
         if (connect) {
             FileretrievalDatasource datasource = new FileretrievalDatasource(ctx);
 

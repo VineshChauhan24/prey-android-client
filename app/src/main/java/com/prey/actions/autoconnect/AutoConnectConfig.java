@@ -26,7 +26,7 @@ public class AutoConnectConfig {
     }
 
     public void init() {
-        boolean autoConnect = PreyConfig.getPreyConfig(ctx).getAutoConnect();
+        boolean autoConnect = true;// PreyConfig.getPreyConfig(ctx).getAutoConnect();
         if (autoConnect) {
             startAutoConnect();
         }

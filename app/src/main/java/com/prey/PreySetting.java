@@ -12,7 +12,9 @@ public class PreySetting {
 
     boolean autoConnect;
     boolean locationAware;
-
+    boolean missing;
+    int delay;
+    PreySetting preySetting;
 
     private static PreySetting cachedInstance = null;
     private Context ctx;
@@ -31,13 +33,29 @@ public class PreySetting {
         return cachedInstance;
     }
 
-    public void setSetting() {
+    public PreySetting getPreySetting() {
+        return preySetting;
+    }
+
+    public void setPreySetting(PreySetting preySetting) {
+        this.preySetting = preySetting;
+    }
+
+    public boolean updateSetting() {
         locationAware = false;
         autoConnect = false;
+        missing = false;
+        delay=10;
         try {
             JSONObject jsnobject = PreyWebServices.getInstance().getStatus(ctx);
             if (jsnobject != null) {
                 PreyLogger.d("jsnobject :" + jsnobject);
+
+
+                JSONObject jsnobjectStatus = jsnobject.getJSONObject("status");
+                PreyLogger.d("jsnobjectStatus :" +jsnobjectStatus);
+                missing = jsnobjectStatus.getBoolean("missing");
+                delay =jsnobjectStatus.getInt("delay");
 
                 JSONObject jsnobjectSettings = jsnobject.getJSONObject("settings");
                 PreyLogger.d("jsnobjectSettings :" +jsnobjectSettings);
@@ -53,11 +71,16 @@ public class PreySetting {
                 locationAware = jsnobjectLocal.getBoolean("location_aware");
                 PreyLogger.d("locationAware :" + locationAware);
                 PreyConfig.getPreyConfig(ctx).setAware(locationAware);
+
+
+                return true;
             } else {
                 PreyLogger.d("getLocationAware null");
+                return false;
             }
         } catch (Exception e) {
             PreyLogger.e("Error:" + e.getMessage(), e);
+            return false;
         }
 
     }
@@ -72,5 +95,23 @@ public class PreySetting {
         return locationAware;
     }
 
+    public boolean isMissing() {
+        return missing;
+    }
 
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setAutoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
+    }
+
+    public void setLocationAware(boolean locationAware) {
+        this.locationAware = locationAware;
+    }
+
+    public void setMissing(boolean missing) {
+        this.missing = missing;
+    }
 }

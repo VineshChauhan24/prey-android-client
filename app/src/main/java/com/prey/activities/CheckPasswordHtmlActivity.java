@@ -45,7 +45,8 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
         getSupportActionBar().hide();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.webview);
-        PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
+        //PreyLogger.d("CheckPasswordHtmlActivity: onCreate");
+        /*
         new Thread() {
             public void run() {
                 String email= PreyWebServices.getInstance().getEmail(getApplicationContext());
@@ -58,19 +59,19 @@ public class CheckPasswordHtmlActivity extends AppCompatActivity{
                 }
 
             }
-        }.start();
+        }.start();*/
         loadUrl();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        PreyLogger.d("CheckPasswordHtmlActivity: onResume");
+        //PreyLogger.d("CheckPasswordHtmlActivity: onResume");
         PreyConfig.getPreyConfig(this).registerC2dm();
     }
 
     public void settings(){
-        PreyLogger.d("CheckPasswordHtmlActivity: settings");
+        //PreyLogger.d("CheckPasswordHtmlActivity: settings");
         myWebView = (WebView) findViewById(R.id.install_browser);
         WebSettings settings = myWebView.getSettings();
         myWebView.setBackgroundColor(0x00000000);

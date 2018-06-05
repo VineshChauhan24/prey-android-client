@@ -20,12 +20,12 @@ public class FileConfigReader {
 
     private FileConfigReader(Context ctx) {
         try {
-            PreyLogger.d("Loading config properties from file...");
+            //PreyLogger.d("Loading config properties from file...");
             properties = new Properties();
             InputStream is = ctx.getResources().openRawResource(R.raw.config);
             properties.load(is);
             is.close();
-            PreyLogger.d("Config: " + properties);
+            //PreyLogger.d("Config: " + properties);
 
         } catch (NotFoundException e) {
             PreyLogger.e("Config file wasn't found", e);

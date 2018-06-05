@@ -70,11 +70,11 @@ public class AwareService extends IntentService {
                             PreyConfig.getPreyConfig(ctx).setAware(false);
                             PreyConfig.getPreyConfig(ctx).setIntervalAware("");
                             AwareScheduled.getInstance(ctx).reset();
-                            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "aware", "stopped", reason));
+                            //PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("stop", "aware", "stopped", reason));
                         }
                         if (preyResponse.getStatusCode() == 200) {
                             PreyLogger.d("getStatusCode 200");
-                            PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "aware", "started", reason));
+                           // PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed", messageId, UtilJson.makeMapParam("start", "aware", "started", reason));
                         }
                     }
                 }

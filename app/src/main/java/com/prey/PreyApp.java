@@ -45,9 +45,11 @@ public class PreyApp extends Application {
             boolean chromium=getPackageManager().hasSystemFeature("org.chromium.arc.device_management");
             PreyLogger.d("chromium:"+chromium);
 
+           // PreyConfig.getPreyConfig(this).setDeviceId("5d5330");
+
             String deviceKey = PreyConfig.getPreyConfig(this).getDeviceId();
 
-            PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
+            /*PreyLogger.d("InstallationDate:" + PreyConfig.getPreyConfig(this).getInstallationDate());
             if (PreyConfig.getPreyConfig(this).getInstallationDate() == 0) {
                 PreyConfig.getPreyConfig(this).setInstallationDate(new Date().getTime());
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_INIT);
@@ -58,14 +60,14 @@ public class PreyApp extends Application {
             String PreyVersion = PreyConfig.getPreyConfig(this).getPreyVersion();
             String preferencePreyVersion = PreyConfig.getPreyConfig(this).getPreferencePreyVersion();
             PreyLogger.d("PreyVersion:" + PreyVersion+" preferencePreyVersion:"+preferencePreyVersion);
-            boolean missing=PreyConfig.getPreyConfig(this).isMissing();
+            /*boolean missing=PreyConfig.getPreyConfig(this).isMissing();
             if (PreyVersion.equals(preferencePreyVersion)) {
                 PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
-            }
+            }*/
             if (deviceKey != null && deviceKey != "") {
-                PreyConfig.getPreyConfig(this).registerC2dm();
-                new Thread() {
+                //PreyConfig.getPreyConfig(this).registerC2dm();
+               /* new Thread() {
                     public void run() {
                         GeofenceController.getInstance().init(getApplicationContext());
                     }
@@ -79,14 +81,15 @@ public class PreyApp extends Application {
                     if (PreyConfig.getPreyConfig(this).getIntervalReport() != null && !"".equals(PreyConfig.getPreyConfig(this).getIntervalReport())) {
                         ReportScheduled.getInstance(this).run();
                     }
-                }
+                }*/
                 new Thread() {
                     public void run() {
-                        PreySetting.getPreySetting(getApplicationContext()).setSetting();
-                        AwareConfig.getAwareConfig(getApplicationContext()).init();
-                        AutoConnectConfig.getAutoConnectConfig(getApplicationContext()).init();
+                      // PreySetting.getPreySetting(getApplicationContext()).updateSetting();
+                       // AwareConfig.getAwareConfig(getApplicationContext()).init();
+                       // AutoConnectConfig.getAutoConnectConfig(getApplicationContext()).init();
                     }
                 }.start();
+                /*
                 new Thread() {
                     public void run() {
                         if (PreyConfig.getPreyConfig(getApplicationContext()).isSimChanged()) {
@@ -108,7 +111,7 @@ public class PreyApp extends Application {
                 if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
                     DisablePowerCheckBoxPreference.notifyReady(this);
                     this.startService(new Intent(this, PreyDisablePowerOptionsService.class));
-                }
+                }*/
             }
         } catch (Exception e) {
             PreyLogger.e("Error PreyApp:" + e.getMessage(), e);

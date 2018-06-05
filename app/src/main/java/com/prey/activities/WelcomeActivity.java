@@ -45,14 +45,14 @@ public class WelcomeActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        PreyLogger.d("onCreate of WelcomeActivity");
+        //PreyLogger.d("onCreate of WelcomeActivity");
         menu();
 
     }
 
 
     public void menu() {
-        PreyLogger.d("menu WelcomeActivity");
+        //PreyLogger.d("menu WelcomeActivity");
         String email = PreyConfig.getPreyConfig(this).getEmail();
         if(email==null||"".equals(email)){
             PreyLogger.d("email:"+email);
@@ -70,7 +70,7 @@ public class WelcomeActivity extends FragmentActivity {
     }
 
     public void ready() {
-        PreyLogger.d("ready WelcomeActivity");
+        //PreyLogger.d("ready WelcomeActivity");
         PreyVerify.getInstance(this);
 
         Intent intent = null;

@@ -28,21 +28,21 @@ public class AutoConnectScheduled {
 
     public void run() {
         try {
-            String minuteSt = "2";//PreyConfig.getPreyConfig(context).getIntervalAutoConnect();
+            String minuteSt = "1";//PreyConfig.getPreyConfig(context).getIntervalAutoConnect();
             PreyLogger.d("----------AutoConnectScheduled start minute:" + minuteSt);
-            if (PreyConfig.getPreyConfig(context).getAutoConnect() && minuteSt != null && !"".equals(minuteSt)) {
+            if (true){//PreyConfig.getPreyConfig(context).getAutoConnect() && minuteSt != null && !"".equals(minuteSt)) {
                 int minute = Integer.parseInt(minuteSt);
                 Intent intent = new Intent(context, AutoConnectAlarmReceiver.class);
                 pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.KITKAT) {
-                    PreyLogger.d("----------setRepeating AutoConnect: " + minute);
+                    PreyLogger.d("----------setRepeating AutoConnect: " + minute+"\n");
                     alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
                 } else {
                     PreyLogger.d("----------setInexactRepeating AutoConnect: " + minute);
                     alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * minute, pendingIntent);
                 }
-                PreyLogger.d("----------start AutoConnect [" + minute + "] AutoConnectScheduled");
+                PreyLogger.d("----------start AutoConnect [" + minute + "] AutoConnectScheduled\n");
             }
         } catch (Exception e) {
             PreyLogger.d("----------Error AutoConnectScheduled :" + e.getMessage());

@@ -13,9 +13,9 @@ public class AutoConnectAlarmReceiver  extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         try {
             String minuteSt = "2";//PreyConfig.getPreyConfig(context).getIntervalAware();
-            PreyLogger.d("______________________________");
-            PreyLogger.d("______________________________");
-            PreyLogger.d("----------AutoConnectAlarmReceiver onReceive[" + minuteSt + "]");
+            PreyLogger.d("AutoConnectAlarmReceiver______________________________\n");
+            PreyLogger.d("AutoConnectAlarmReceiver______________________________\n");
+            PreyLogger.d("AutoConnectAlarmReceiver----------AutoConnectAlarmReceiver onReceive[" + minuteSt + "]\n");
             final Context ctx = context;
             new Thread() {
                 public void run() {

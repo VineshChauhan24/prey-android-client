@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
+import com.prey.actions.autoconnect.AutoConnectConfig;
+import com.prey.actions.autoconnect.AutoConnectService;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends Activity {
@@ -33,7 +35,12 @@ public class LoginActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         startup();
+        new Thread() {
+            public void run() {
 
+                new AutoConnectService().run(getApplicationContext());
+            }
+        }.start();
     }
 
     @Override
@@ -57,9 +64,9 @@ public class LoginActivity extends Activity {
     private void startup() {
         Intent intent = null;
         boolean ready=PreyConfig.getPreyConfig(this).getProtectReady();
-        if (isThisDeviceAlreadyRegisteredWithPrey()) {
+        /*if (isThisDeviceAlreadyRegisteredWithPrey()) {
             PreyVerify.getInstance(this);
-        }
+        }*/
         if (isThereBatchInstallationKey()&&!ready) {
                 showLoginBatch();
         } else {
