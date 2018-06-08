@@ -7,19 +7,29 @@
 package com.prey;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.prey.actions.autoconnect.AutoConnectConfig;
+import com.prey.actions.autoconnect.AutoConnectService;
 import com.prey.actions.aware.AwareConfig;
 import com.prey.actions.fileretrieval.FileretrievalController;
 import com.prey.actions.geofences.GeofenceController;
 import com.prey.actions.report.ReportScheduled;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.events.Event;
 import com.prey.events.manager.EventManagerRunner;
+import com.prey.events.receivers.EventReceiver;
 import com.prey.managers.PreyTelephonyManager;
+import com.prey.net.PreyHttpResponse;
 import com.prey.net.PreyWebServices;
 import com.prey.preferences.DisablePowerCheckBoxPreference;
+import com.prey.services.MyFirebaseInstanceIDService;
 import com.prey.services.PreyDisablePowerOptionsService;
 
 import org.json.JSONObject;
@@ -65,8 +75,51 @@ public class PreyApp extends Application {
                 PreyConfig.getPreyConfig(this).setPreferencePreyVersion(PreyVersion);
                 PreyWebServices.getInstance().sendEvent(this, PreyConfig.ANDROID_VERSION_UPDATED);
             }*/
+
+            final Context ctx=getApplicationContext();
+
+
+            String token = FirebaseInstanceId.getInstance().getToken();
+            PreyLogger.d("token: " + token);
+
             if (deviceKey != null && deviceKey != "") {
-                //PreyConfig.getPreyConfig(this).registerC2dm();
+
+
+
+
+                BroadcastReceiver br = new EventReceiver();
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(Intent.ACTION_SHUTDOWN);
+                filter.addAction(Intent.ACTION_BATTERY_LOW);
+                filter.addAction(Intent.ACTION_BATTERY_OKAY);
+                filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                filter.addAction(Intent.ACTION_BOOT_COMPLETED);
+                filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+
+                PreyLogger.d("BroadcastReceiver: " );
+                this.registerReceiver(br, filter);
+
+                new Thread() {
+                    public void run() {
+                        String token = FirebaseInstanceId.getInstance().getToken();
+                        PreyLogger.d("token: " + token);
+                        String registration="FCM__"+token;
+                        PreyHttpResponse response = PreyWebServices.getInstance().setPushRegistrationId(ctx, registration);
+                        PreyConfig.getPreyConfig(ctx).setNotificationId(registration);
+                        if (response != null) {
+                            PreyLogger.d("response:" + response.toString());
+                        }
+                        PreyConfig.getPreyConfig(ctx).setRegisterC2dm(true);
+                    }
+                }.start();
+
+                new Thread() {
+                    public void run() {
+
+                        new AutoConnectService().run(getApplicationContext());
+                    }
+                }.start();
+                PreyBetaController.startPrey(getApplicationContext(), null);
                /* new Thread() {
                     public void run() {
                         GeofenceController.getInstance().init(getApplicationContext());
@@ -89,7 +142,7 @@ public class PreyApp extends Application {
                        // AutoConnectConfig.getAutoConnectConfig(getApplicationContext()).init();
                     }
                 }.start();
-                /*
+
                 new Thread() {
                     public void run() {
                         if (PreyConfig.getPreyConfig(getApplicationContext()).isSimChanged()) {
@@ -107,7 +160,7 @@ public class PreyApp extends Application {
                         }
                     }
                 }.start();
-
+/*
                 if(PreyConfig.getPreyConfig(this).isDisablePowerOptions()){
                     DisablePowerCheckBoxPreference.notifyReady(this);
                     this.startService(new Intent(this, PreyDisablePowerOptionsService.class));

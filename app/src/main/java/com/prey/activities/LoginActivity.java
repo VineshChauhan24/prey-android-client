@@ -17,9 +17,6 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
-import com.prey.actions.autoconnect.AutoConnectConfig;
-import com.prey.actions.autoconnect.AutoConnectService;
-import com.prey.services.PreyDisablePowerOptionsService;
 
 public class LoginActivity extends Activity {
 
@@ -34,13 +31,7 @@ public class LoginActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        startup();
-        new Thread() {
-            public void run() {
 
-                new AutoConnectService().run(getApplicationContext());
-            }
-        }.start();
     }
 
     @Override

@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -69,7 +70,7 @@ public class PreyLockService extends Service{
         final String unlock= PreyConfig.getPreyConfig(ctx).getUnlockPass();
 
         if(unlock!=null&&!"".equals(unlock)) {
-            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+
             LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.super_lock2, null);
             Typeface regularBold = Typeface.createFromAsset(getAssets(), "fonts/Regular/regular-bold.ttf");
@@ -187,13 +188,40 @@ public class PreyLockService extends Service{
             layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.TRANSLUCENT;
-            layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
+
+           layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
+
+
+            //layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE| WindowManager.LayoutParams.FLAG_FULLSCREEN;
+           // layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+
+
+
             layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            wm.addView(view, layoutParams);
+
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+                PreyLogger.i("antes");
+                if (Settings.canDrawOverlays(this)) {
+                    PreyLogger.i("durante");
+                    if(wm != null) {
+                        wm.addView(view, layoutParams);
+                    }else{
+                        PreyLogger.i("vacio");
+                    }
+                }else{
+                    PreyLogger.i("no permiso");
+                }
+            }
+
         }else{
             if(view != null){
                 WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-                wm.removeView(view);
+                if(wm != null) {
+                    wm.removeView(view);
+                }
                 view = null;
             }
             stopSelf();
@@ -205,7 +233,9 @@ public class PreyLockService extends Service{
         PreyLogger.d("PreyLockService onDestroy");
         if(view != null){
             WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
-            wm.removeView(view);
+            if(wm != null) {
+                wm.removeView(view);
+            }
             view = null;
         }
     }

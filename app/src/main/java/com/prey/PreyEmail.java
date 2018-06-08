@@ -34,7 +34,7 @@ public class PreyEmail {
                     Map<String, String> parameters = new HashMap<String, String>();
                     PreyConfig preyConfig = PreyConfig.getPreyConfig(ctx);
                     PreyHttpResponse preyHttpResponse = null;
-                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters, entityFiles);
+                    preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postAutentication(url, parameters);
                     //PreyLogger.i("status line:" + preyHttpResponse.getStatusCode());
                 }
             }

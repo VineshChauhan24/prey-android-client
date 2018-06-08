@@ -147,7 +147,9 @@ public class EventFactory {
             return new Event(Event.WIFI_CHANGED, info.toString());
         }
         if (AIRPLANE_MODE.equals(intent.getAction())) {
+            PreyLogger.i("AIRPLANE_MODE");
             if (!isAirplaneModeOn(ctx)) {
+                PreyLogger.i("AIRPLANE_MODE 1");
                 notification(ctx);
                 boolean connected=false;
                 if (!PreyConnectivityManager.getInstance(ctx).isWifiConnected()) {
@@ -176,6 +178,12 @@ public class EventFactory {
                         }
                     }.start();
 
+                }
+            }else{
+                PreyLogger.i("AIRPLANE_MODE 2");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try{ Thread.sleep(10000);} catch (Exception e) {}
+                    Settings.Global.putString(ctx.getContentResolver(), "airplane_mode_on", "1");
                 }
             }
         }

@@ -6,20 +6,10 @@
  ******************************************************************************/
 package com.prey.services;
 
-import android.content.Context;
-import android.os.Bundle;
 
-import com.google.android.gms.gcm.GcmListenerService;
 
-import com.prey.PreyConfig;
-import com.prey.PreyLogger;
-import com.prey.beta.actions.PreyBetaController;
-
-import java.util.Iterator;
-import java.util.Set;
-
-public class PreyGcmListenerService extends GcmListenerService {
-
+public class PreyGcmListenerService  {
+/*
     @Override
     public void onMessageReceived(String from, Bundle data) {
         PreyLogger.d("PUSH_______________");
@@ -57,5 +47,5 @@ public class PreyGcmListenerService extends GcmListenerService {
         PreyLogger.d("Push message received " + body + " version:" + version);
         PreyBetaController.startPrey(context, cmd);
     }
-
+*/
 }
