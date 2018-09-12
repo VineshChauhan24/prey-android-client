@@ -360,7 +360,7 @@
 
         <service android:name="com.prey.services.PreyNotificationForeGroundService" />
 
-
+        <service android:name="com.prey.services.PreyLockAdminService" />
 
         <!-- [START firebase_service] -->
         <service
