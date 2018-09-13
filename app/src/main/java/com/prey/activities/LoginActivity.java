@@ -6,6 +6,7 @@
  ******************************************************************************/
 package com.prey.activities;
 
+import com.prey.PreyLogger;
 import com.prey.PreyVerify;
 
 import android.app.Activity;
@@ -17,7 +18,11 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.prey.PreyConfig;
+import com.prey.events.Event;
+import com.prey.events.manager.EventManagerRunner;
 import com.prey.services.PreyDisablePowerOptionsService;
+
+import org.json.JSONObject;
 
 public class LoginActivity extends Activity {
 
@@ -33,6 +38,19 @@ public class LoginActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         startup();
+
+
+
+/*
+                try {
+                    PreyLogger.d("EVENT pin_:1234");
+                    JSONObject info = new JSONObject();
+                    info.put("pin", "1234");
+                    Event event= new Event(Event.PIN_CHANGED, info.toString());
+                    new EventManagerRunner(getApplicationContext(), event).run();
+                } catch (Exception e) {
+                    PreyLogger.e("EVENT error pin_:"+e.getMessage(),e);
+                }*/
 
     }
 

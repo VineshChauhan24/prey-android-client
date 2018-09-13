@@ -22,6 +22,7 @@ import com.prey.R;
 import com.prey.activities.LoginActivity;
 import com.prey.activities.WelcomeActivity;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.exceptions.PreyException;
 import com.prey.json.UtilJson;
 import com.prey.json.actions.Lock;
 import com.prey.net.PreyWebServices;
@@ -38,26 +39,20 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
             PreyLogger.d("onReceive32:" + intent.getAction());
 
 
-
+            PreyConfig preyConfig = PreyConfig.getPreyConfig(context);
+            if (preyConfig.isFroyoOrAbove()){
+                preyConfig.setLock(true);
+                try{
+                    FroyoSupport.getInstance(context).changePasswordAndLock("1234",true);
+                }catch (PreyException e){
+                }
+            }
             DevicePolicyManager policyManager = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
             //ComponentName deviceAdmin = new ComponentName(context, PreyDeviceAdmin.class);
             policyManager.lockNow();
 
 
-            try {
-                Intent intent3 = new Intent(context, PreyLockAdminService.class);
-                context.startService(intent3);
-            } catch (Exception e) {
-                PreyLogger.e("error:" + e.getMessage(), e);
-            }
-    /*
-            try {
-                Intent intent4 = new Intent(context, WelcomeActivity.class);
-                context.startActivity(intent4);
-            } catch (Exception e) {
-                PreyLogger.e("error:" + e.getMessage(), e);
-            }
-*/
+
 
             abortBroadcast();
         }

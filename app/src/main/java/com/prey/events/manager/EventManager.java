@@ -40,9 +40,9 @@ public class EventManager {
         boolean isOnline = false;
 
 
-
+        PreyLogger.d("EVENT execute");
         PreyConfig.getPreyConfig(ctx).registerC2dm();
-
+        PreyLogger.d("EVENT registerC2dm ");
 
         String ssid = PreyWifiManager.getInstance(ctx).getSSID();
 
@@ -56,10 +56,11 @@ public class EventManager {
                 validation = false;
             }
         }
-
+        PreyLogger.d("EVENT validation "+validation);
         if (validation) {
-            PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
-            PreyLogger.d("change PreviousSsid:" + ssid);
+
+            PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo() + " ssid[" + ssid + "] previousSsid[" + previousSsid + "]");
+            PreyLogger.d("EVENT change PreviousSsid:" + ssid);
             PreyConfig.getPreyConfig(ctx).setPreviousSsid(ssid);
             try {
                 isConnectionExists = PreyConfig.getPreyConfig(ctx).isConnectionExists();
@@ -106,14 +107,14 @@ public class EventManager {
     private void sendEvents() {
         if (mapData != null) {
             JSONObject jsonObjectStatus = mapData.toJSONObject();
-            PreyLogger.d("jsonObjectStatus: " + jsonObjectStatus.toString());
+            PreyLogger.d("EVENT jsonObjectStatus: " + jsonObjectStatus.toString());
             if (event != null) {
                 if (PreyWifiManager.getInstance(ctx).isOnline()) {
                     String lastEvent = PreyConfig.getPreyConfig(ctx).getLastEvent();
-                    PreyLogger.d("lastEvent:"+lastEvent);
+                    PreyLogger.d("EVENT lastEvent:"+lastEvent);
                     if (Event.BATTERY_LOW.equals(event.getName())) {
                         if(PreyConfig.getPreyConfig(ctx).isLocationLowBattery()) {
-                            PreyLogger.d("LocationLowBatteryRunner.isValid(ctx):"+ LocationLowBatteryRunner.isValid(ctx));
+                            PreyLogger.d("EVENT LocationLowBatteryRunner.isValid(ctx):"+ LocationLowBatteryRunner.isValid(ctx));
                             if (LocationLowBatteryRunner.isValid(ctx)) {
                                 new Thread(new LocationLowBatteryRunner(ctx)).start();
                                 try{
@@ -125,7 +126,7 @@ public class EventManager {
 
                     if (!Event.WIFI_CHANGED.equals(event.getName()) || !event.getName().equals(lastEvent)) {
                         PreyConfig.getPreyConfig(ctx).setLastEvent(event.getName());
-                        PreyLogger.d("event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
+                        PreyLogger.d("EVENT event name[" + this.event.getName() + "], info[" + this.event.getInfo() + "]");
                         new EventThread(ctx, event, jsonObjectStatus).start();
                     }
 

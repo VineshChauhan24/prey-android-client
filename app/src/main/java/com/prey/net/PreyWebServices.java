@@ -605,13 +605,15 @@ public class PreyWebServices {
             parameters.put("name", event.getName());
             parameters.put("info", event.getInfo());
 
-            PreyLogger.d("sendPreyHttpEvent url:" + url);
-            PreyLogger.d("name:" + event.getName() + " info:" + event.getInfo());
-            PreyLogger.d("status:" + jsonObject.toString());
+            PreyLogger.d("EVENT sendPreyHttpEvent url:" + url);
+            PreyLogger.d("EVENT name:" + event.getName() + " info:" + event.getInfo());
+            PreyLogger.d("EVENT status:" + jsonObject.toString());
             String status = jsonObject.toString();
             preyHttpResponse = PreyRestHttpClient.getInstance(ctx).postStatusAutentication(url, status, parameters);
             if(preyHttpResponse!=null) {
+
                 String jsonString = preyHttpResponse.getResponseAsString();
+                PreyLogger.d("EVENT jsonString:" +jsonString);
                 if (jsonString != null && jsonString.length() > 0) {
                     List<JSONObject> jsonObjectList = new JSONParser().getJSONFromTxt(ctx, jsonString.toString());
                     if (jsonObjectList != null && jsonObjectList.size() > 0) {
@@ -620,7 +622,7 @@ public class PreyWebServices {
                 }
             }
         } catch (Exception e) {
-            PreyLogger.e("Event wasn't send", e);
+            PreyLogger.e("EVENT Event wasn't send", e);
         }
         return preyHttpResponse;
     }
