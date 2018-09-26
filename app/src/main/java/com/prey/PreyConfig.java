@@ -81,6 +81,7 @@ public class PreyConfig {
     public static final String PREFS_IS_MISSING="PREFS_IS_MISSING";
 
     public static final String PREFS_DISABLE_POWER_OPTIONS="PREFS_DISABLE_POWER_OPTIONS";
+    public static final String PREFS_BLOCK_APP_UNINSTALL="PREFS_BLOCK_APP_UNINSTALL";
     public static final String IS_LOCK_SET="IS_LOCK_SET";
     public static final String NEXT_ALERT="NEXT_ALERT";
     public static final String IS_CAMOUFLAGE_SET="IS_CAMOUFLAGE_SET";
@@ -174,6 +175,8 @@ public class PreyConfig {
     public static final String AWARE_LNG="AWARE_LNG";
     public static final String AWARE_ACC="AWARE_ACC";
 
+
+    public static final String TIME_BLOCK_APP_UNINSTALL= "TIME_BLOCK_APP_UNINSTALL";
 
 
     private boolean securityPrivilegesAlreadyPrompted;
@@ -637,6 +640,19 @@ public class PreyConfig {
         saveBoolean(PreyConfig.PREFS_DISABLE_POWER_OPTIONS, disablePowerOptions);
     }
 
+
+    public boolean isBlockAppUninstall(){
+        return getBlockAppUninstall();
+    }
+
+    public boolean getBlockAppUninstall() {
+        return getBoolean(PreyConfig.PREFS_BLOCK_APP_UNINSTALL, false);
+    }
+
+    public void setBlockAppUninstall(boolean blockAppUninstall) {
+        saveBoolean(PreyConfig.PREFS_BLOCK_APP_UNINSTALL, blockAppUninstall);
+    }
+
     public void setLock(boolean locked) {
         saveBoolean(PreyConfig.IS_LOCK_SET, locked);
     }
@@ -1089,6 +1105,15 @@ public class PreyConfig {
         }catch(Exception e){
             return null;
         }
+    }
+
+
+    public void setTimeBlockAppUninstall(long timeBlockAppUninstall){
+        saveLong(PreyConfig.TIME_BLOCK_APP_UNINSTALL, timeBlockAppUninstall);
+    }
+
+    public long getTimeBlockAppUninstall(){
+        return getLong(PreyConfig.TIME_BLOCK_APP_UNINSTALL, 0);
     }
 
 }
