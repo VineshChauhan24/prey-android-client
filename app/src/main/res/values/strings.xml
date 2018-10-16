@@ -292,5 +292,7 @@
 
     <string name="preference_background_summary">As of Android 8.0, Prey needs to display a notification to run as a background app and actively track the device and its control zone triggers.</string>
     <string name="preference_background_title">Run in Background</string>
+    <string name="picture">Picture</string>
+
 
 </resources>

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -155,12 +156,16 @@ public class LocationUtil {
         }
         return preyLocation;
     }
-
+    @TargetApi(26)
     private static PreyLocation  getPreyLocationAppServiceOreo(final Context ctx ,String method, boolean asynchronous, PreyLocation preyLocationOld){
         PreyLocation preyLocation = null;
         Intent intent = new Intent(ctx, LocationUpdatesService.class);
         try {
-            ctx.startService(intent);
+            try {
+                ctx.startService(intent);
+            } catch (Exception e){
+                ctx.startForegroundService(intent);
+            }
             int i = 0;
             PreyLocationManager.getInstance(ctx).setLastLocation(null);
             while (i < MAXIMUM_OF_ATTEMPTS) {

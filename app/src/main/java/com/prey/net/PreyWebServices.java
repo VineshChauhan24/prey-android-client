@@ -670,6 +670,7 @@ public class PreyWebServices {
             if (httpDataService != null) {
                 parameters.putAll(httpDataService.getReportAsParameters());
                 if (httpDataService.getEntityFiles() != null && httpDataService.getEntityFiles().size() > 0) {
+                    PreyLogger.d("files add");
                     entityFiles.addAll(httpDataService.getEntityFiles());
                 }
             }
