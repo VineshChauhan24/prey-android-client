@@ -59,6 +59,7 @@ public class AlertThread extends Thread {
                     sleep(1000);
                     i++;
                 }
+                Thread.sleep(1000)
             } catch (InterruptedException e) {
             }
             PreyWebServices.getInstance().sendNotifyActionResultPreyHttp(ctx, "processed",messageId,UtilJson.makeMapParam("stop", "alert", "stopped",reason));

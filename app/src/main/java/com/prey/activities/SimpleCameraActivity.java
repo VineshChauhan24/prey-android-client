@@ -133,6 +133,7 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
 
     public void takePicture(Context ctx, String focus) {
+        PreyLogger.i("camera takePicture");
         try {
             if (camera != null) {
                 Camera.Parameters parameters = camera.getParameters();
@@ -168,11 +169,12 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
             }
         } catch (Exception e) {
+            PreyLogger.e("takePicture:"+e.getMessage(),e);
         }
 
         try {
             if (camera != null) {
-
+                PreyLogger.i("camera!Unull .takePicture");
                 camera.takePicture(shutterCallback, rawCallback, jpegCallback);
                 PreyLogger.d("open takePicture()");
             }
@@ -210,12 +212,14 @@ public class SimpleCameraActivity extends Activity implements SurfaceHolder.Call
 
     PictureCallback rawCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
+            PreyLogger.i("onPictureTaken"+data.length);
         }
+
     };
 
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
-
+            PreyLogger.i("onPictureTaken2"+data.length);
             dataImagen = resizeImage(data);
         }
     };

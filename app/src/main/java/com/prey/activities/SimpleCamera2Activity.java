@@ -287,7 +287,7 @@ PreyLogger.i("IMG SimpleCamera2Activity onCreate");
         }
 
         @Override
-        public void onDisconnected(@NonNull CameraDevice cameraDevice) {
+        public void onDisconnected(@NonNull CameraDevice cameraDevice) {createCameraPreviewSession
             PreyLogger.i("CAMERA onDisconnected");
             mCameraOpenCloseLock.release();
             cameraDevice.close();

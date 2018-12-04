@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.observer.ActionResult;
 import com.prey.actions.picture.PictureThread;
@@ -35,10 +36,12 @@ public class Picture extends JsonAction {
 
 
     public HttpDataService run(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.i("Picture run");
         return PictureUtil.getPicture(ctx);
     }
 
     public HttpDataService start(Context ctx, List<ActionResult> list, JSONObject parameters) {
+        PreyLogger.i("Picture start");
         return PictureUtil.getPicture(ctx);
     }
 

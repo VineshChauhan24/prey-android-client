@@ -43,7 +43,7 @@ public class WebAppInterface {
     Context mContext;
     int wrongPasswordIntents = 0;
 
-    private CheckPasswordHtmlActivity mActivity;
+
 
     public WebAppInterface(Context context, CheckPasswordHtmlActivity activity) {
         mContext = context;

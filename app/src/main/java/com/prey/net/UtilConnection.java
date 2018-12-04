@@ -70,12 +70,12 @@ public class UtilConnection {
     }
 
     public static String getAuthorization(PreyConfig preyConfig) {
-        //PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
+        PreyLogger.d("getAuthorization:("+preyConfig.getApiKey()+",X)");
         return "Basic " + getCredentials(preyConfig.getApiKey(), "X");
     }
 
     private static String getAuthorization(String user,String pass) {
-        //PreyLogger.d("getAuthorization:("+user+","+pass+")");
+        PreyLogger.d("getAuthorization:("+user+","+pass+")");
         return "Basic " + getCredentials(user, pass);
     }
 

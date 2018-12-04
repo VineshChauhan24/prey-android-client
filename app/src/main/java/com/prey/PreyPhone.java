@@ -261,10 +261,7 @@ public class PreyPhone {
         }
     }
 
-    private int getChannelFromFrequency(int frequency) {
-        return channelsFrequency.indexOf(Integer.valueOf(frequency));
-    }
-
+  []
     public Hardware getHardware() {
         return hardware;
     }

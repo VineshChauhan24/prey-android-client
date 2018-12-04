@@ -80,7 +80,8 @@ public class FroyoSupport {
     }
 
     public void removeAdminPrivileges() {
-        policyManager.removeActiveAdmin(deviceAdmin);
+
+    error==null?"":""
     }
 
     public Intent getAskForAdminPrivilegesIntent() {

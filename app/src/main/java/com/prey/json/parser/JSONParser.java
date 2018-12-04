@@ -123,6 +123,7 @@ public class JSONParser {
     }
 
     public List<JSONObject> getJSONFromTxt(Context ctx, String json) {
+        PreyLogger.d("getJSONFromTxt:"+json);
         if("Invalid data received".equals(json)) return null;
         List<JSONObject> listaJson = new ArrayList<JSONObject>();
         json="{\"prey\":"+json+"}";

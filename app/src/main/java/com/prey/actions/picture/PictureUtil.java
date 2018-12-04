@@ -27,6 +27,7 @@ import com.prey.PreyLogger;
 import com.prey.actions.HttpDataService;
 import com.prey.actions.camera.CameraAction;
 
+import com.prey.activities.ScreenActivity;
 import com.prey.activities.SimpleCamera2Activity;
 import com.prey.activities.SimpleCamera3Activity;
 import com.prey.activities.SimpleCameraActivity;
@@ -35,6 +36,7 @@ import com.prey.net.http.EntityFile;
 public class PictureUtil {
 
     public static HttpDataService getPicture(Context ctx) {
+        PreyLogger.i("PictureUtil getPicture");
         HttpDataService data = null;
         try {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmZ");
@@ -43,15 +45,13 @@ public class PictureUtil {
                     ) {
                 data = new HttpDataService(CameraAction.DATA_ID);
                 data.setList(true);
-                /*
 
-*/
 
                 try{
                     Integer numberOfCameras = SimpleCameraActivity.getNumberOfCameras();
                     if (numberOfCameras != null && numberOfCameras > 1) {
                         Thread.sleep(6000);
-                        byte[] backPicture = getPicture2(ctx, "back");
+                        byte[] backPicture = getPicture0(ctx, "back");
                         if (backPicture != null) {
                             PreyLogger.d("back data length=" + backPicture.length);
                             InputStream file = new ByteArrayInputStream(backPicture);
@@ -70,7 +70,7 @@ public class PictureUtil {
                 }
 
                 try{
-                    byte[] frontPicture = getPicture2(ctx, "front");
+                    byte[] frontPicture = getPicture0(ctx, "front");
 
                     if (frontPicture != null) {
                         PreyLogger.d("front data length=" + frontPicture.length);
@@ -88,7 +88,7 @@ public class PictureUtil {
                     PreyLogger.e("CAMERA error:"+e1.getMessage(),e1);
                 }
 
-                Intent intent2 = new Intent(ctx, SimpleCamera2Activity.class);
+                Intent intent2 = new Intent(ctx, SimpleCameraActivity.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle myKillerBundle = new Bundle();
                 myKillerBundle.putInt("kill",1);
@@ -183,6 +183,64 @@ public class PictureUtil {
     }
 
 
+    private static byte[] getPicture3(Context ctx, String focus) {
+        AudioManager mgr = null;
+        ScreenActivity.dataImagen = null;
+
+
+
+        PreyLogger.i("SCREEN getPicture3");
+        int streamType = AudioManager.STREAM_SYSTEM;
+        ScreenActivity.activity = null;
+        Intent intent = new Intent(ctx, ScreenActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("focus", focus);
+        ctx.startActivity(intent);
+
+        int i=0;
+        while (ScreenActivity.activity == null&& i < 10) {
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+            }
+            i++;
+        }
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+        }
+
+        try {
+            i = 0;
+            while (ScreenActivity.activity != null && ScreenActivity.dataImagen == null && i < 5) {
+                Thread.sleep(2000);
+                i++;
+            }
+        } catch (InterruptedException e) {
+            PreyLogger.e("Error:" + e.getMessage(),e);
+        }
+        byte[] out=null;
+        if (ScreenActivity.activity != null) {
+
+
+            out=ScreenActivity.dataImagen;
+
+
+            ScreenActivity.activity.finish();
+            ScreenActivity.activity=null;
+            ScreenActivity.dataImagen=null;
+
+
+
+
+        }
+
+
+        return out;
+    }
+
+
     private static byte[] getPicture(Context ctx, String focus) {
         AudioManager mgr = null;
         SimpleCamera2Activity.dataImagen = null;
@@ -251,6 +309,78 @@ public class PictureUtil {
             SimpleCamera2Activity.activity.finish();
             SimpleCamera2Activity.activity=null;
             SimpleCamera2Activity.dataImagen=null;
+
+
+
+
+        }
+
+
+        return out;
+    }
+
+
+    private static byte[] getPicture0(Context ctx, String focus) {
+        AudioManager mgr = null;
+        SimpleCameraActivity.dataImagen = null;
+
+
+
+
+        int streamType = AudioManager.STREAM_SYSTEM;
+        SimpleCameraActivity.activity = null;
+        Intent intent = new Intent(ctx, SimpleCameraActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("focus", focus);
+        ctx.startActivity(intent);
+        int i = 0;
+        mgr = (AudioManager) ctx.getSystemService(Context.AUDIO_SERVICE);
+        //mgr.setStreamSolo(streamType, true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            mgr.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            mgr.setStreamMute(streamType, true);
+        }else{
+            final int setVolFlags = AudioManager.FLAG_PLAY_SOUND;
+            mgr.setStreamVolume(AudioManager.STREAM_MUSIC, 0, setVolFlags);
+        }
+
+        while (SimpleCameraActivity.activity == null&& i < 10) {
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+            }
+            i++;
+        }
+        if (SimpleCameraActivity.activity != null) {
+            SimpleCameraActivity.activity.takePicture(ctx,focus);
+        }
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+        }
+        //mgr.setStreamSolo(streamType, false);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            mgr.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            mgr.setStreamMute(streamType, false);
+        }
+        try {
+            i = 0;
+            while (SimpleCameraActivity.activity != null && SimpleCameraActivity.dataImagen == null && i < 5) {
+                Thread.sleep(2000);
+                i++;
+            }
+        } catch (InterruptedException e) {
+            PreyLogger.e("Error:" + e.getMessage(),e);
+        }
+        byte[] out=null;
+        if (SimpleCameraActivity.activity != null) {
+
+
+            out=SimpleCameraActivity.dataImagen;
+
+            SimpleCameraActivity.activity.finish();
+            SimpleCameraActivity.activity=null;
+            SimpleCameraActivity.dataImagen=null;
 
 
 

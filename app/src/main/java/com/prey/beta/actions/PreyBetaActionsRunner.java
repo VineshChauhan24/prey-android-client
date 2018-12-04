@@ -50,7 +50,7 @@ public class PreyBetaActionsRunner implements Runnable {
                 List<JSONObject> jsonObject = null;
 
                 connection = preyTelephony.isDataConnectivityEnabled() || preyConnectivity.isConnected();
-
+                PreyLogger.d("cmd:"+cmd);
                 if (connection) {
                     try {
                         if (cmd == null || "".equals(cmd)) {

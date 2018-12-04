@@ -104,6 +104,8 @@ public class SimpleCamera3Activity extends Activity {
     }
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -587,10 +589,11 @@ PreyLogger.i("IMG SimpleCamera2Activity onCreate");
             buffer.get(bytes);
 
             dataImagen=bytes;
-*/
+*/          try {
+                mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            }catch (Exception e){
 
-           mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
-
+            }
 
 
         }

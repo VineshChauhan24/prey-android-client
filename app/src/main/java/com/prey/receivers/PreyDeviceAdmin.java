@@ -25,6 +25,8 @@ import com.prey.PreyLogger;
 import com.prey.PreyPermission;
 import com.prey.R;
 import com.prey.backwardcompatibility.FroyoSupport;
+import com.prey.beta.actions.PreyBetaActionsRunner;
+import com.prey.beta.actions.PreyBetaController;
 import com.prey.exceptions.PreyException;
 import com.prey.json.UtilJson;
 import com.prey.net.PreyWebServices;
@@ -78,6 +80,28 @@ public class PreyDeviceAdmin extends DeviceAdminReceiver {
         }
         super.onReceive(context,intent);
     }
+
+    Thread myActionsRunnerThread = null;
+    @Override
+    public void onPasswordFailed(Context context, Intent intent) {
+        PreyLogger.d( "Sample Device Admin: pw failed");
+
+        DevicePolicyManager mgr = (DevicePolicyManager)context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        int no = mgr.getCurrentFailedPasswordAttempts();
+        PreyLogger.d( "Sample Device Admin no:"+no);
+        if(no>1) {
+            try {
+            String cmd = "{\"command\":\"start\",\"target\":\"picture\",\"options\":{}}";
+            this.myActionsRunnerThread = new Thread(new PreyBetaActionsRunner(context, cmd));
+            this.myActionsRunnerThread.start();
+            } catch (Exception e) {
+                PreyLogger.e( "error onPasswordFailed:"+e.getMessage(),e);
+            }
+        }
+
+    }
+
+
 
     @Override
     public void onEnabled(Context context, Intent intent) {
